@@ -210,7 +210,7 @@ For each section in `sections_to_update`:
 3. **Regenerate content**:
    - Keep section structure and heading level
    - Update content based on new source files
-   - Follow `evidence_citation.md` rules
+   - Follow `references/evidence_citation_policy.md` rules
    - Update diagrams if needed
 
 4. **Update document**:
