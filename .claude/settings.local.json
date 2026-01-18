@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude /plugin marketplace add:*)",
+      "Bash(cat:*)",
+      "Bash(chmod:*)",
+      "Bash(mkdir:*)",
+      "Bash(python3:*)",
+      "Bash(git remote:*)",
+      "Bash(git rev-parse:*)",
+      "Skill(deepwiki:wiki)",
+      "Bash(rm:*)",
+      "Skill(deepwiki-local:wiki)",
+      "mcp__plugin_deepwiki-local_deepwiki-local-mcp__collect_project_context",
+      "mcp__plugin_deepwiki-local_deepwiki-local-mcp__collect_file_content",
+      "Bash(find:*)",
+      "mcp__plugin_deepwiki-local_deepwiki-local-mcp__validate_mermaid_syntax",
+      "mcp__plugin_deepwiki-local_deepwiki-local-mcp__get_invalid_mermaid_blocks"
+    ]
+  }
+}

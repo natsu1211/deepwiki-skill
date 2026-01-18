@@ -1,0 +1,8 @@
+{
+  "name": "deepwiki-skill",
+  "description": "Local wiki-style document generator for Claude Code",
+  "version": "1.0.4",
+  "commands": ["./commands/gen.md"],
+  "skills": "./skills/",
+  "repository": "https://github.com/natsu1211/deepwiki-skill"
+}

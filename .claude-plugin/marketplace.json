@@ -1,0 +1,20 @@
+{
+  "name": "deepwiki-skill-marketplace",
+  "description": "Development marketplace for deepwiki-skill",
+  "owner": {
+    "name": "natsu1211",
+    "email": "longyutao1211@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "deepwiki-skill",
+      "description": "wiki-style document generator for Claude Code",
+      "version": "1.0.1",
+      "source": "./",
+      "author": {
+        "name": "natsu1211",
+        "email": "longyutao1211@gmail.com"
+      }
+    }
+  ]
+}

@@ -1,0 +1,241 @@
+project:
+  name: "deepwiki-skill"
+  description: "An AI agent skill that automatically generates comprehensive, evidence-based wiki documentation for any codebase with source citations and Mermaid diagrams."
+  repo_base_url: "https://github.com/natsu1211/deepwiki-skill/blob"
+  ref_commit_hash: "38f3e4f642cfbc9511d4cc1421b2c1ded9febd97"
+  updated_at: "2026-01-17"
+
+pages:
+  - id: deepwiki-skill_01_overview
+    title: "Overview"
+    filename: "01_overview.md"
+    description: "Introduction to deepwiki-skill, its purpose, key features, and quick start guide"
+    source_files:
+      - "README.md"
+      - "skills/wiki/SKILL.md"
+      - "commands/gen.md"
+    sections:
+      - id: deepwiki-skill_01_overview_introduction
+        title: "Introduction"
+        description: "What deepwiki-skill is and why it exists"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_01_overview_key-features
+        title: "Key Features"
+        description: "Main capabilities including evidence-based documentation, Mermaid support, execution modes"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_01_overview_quick-start
+        title: "Quick Start"
+        description: "Installation and basic usage instructions"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+    related_pages:
+      - deepwiki-skill_02_architecture
+      - deepwiki-skill_03_workflow-phases
+
+  - id: deepwiki-skill_02_architecture
+    title: "Architecture"
+    filename: "02_architecture.md"
+    description: "System architecture, component organization, and design patterns"
+    source_files:
+      - "skills/wiki/SKILL.md"
+      - "agents/workflow-runner.md"
+      - "commands/gen.md"
+    sections:
+      - id: deepwiki-skill_02_architecture_system-overview
+        title: "System Overview"
+        description: "High-level architecture showing how skill, agent, and commands interact"
+        autogen: true
+        diagrams_needed: true
+        diagram_types:
+          - flowchart
+      - id: deepwiki-skill_02_architecture_component-structure
+        title: "Component Structure"
+        description: "Directory organization and role of each component (skills, agents, commands, scripts)"
+        autogen: true
+        diagrams_needed: true
+        diagram_types:
+          - flowchart
+      - id: deepwiki-skill_02_architecture_execution-modes
+        title: "Execution Modes"
+        description: "Different execution modes (automatic, structure-only, TOC-based, incremental) and their phase sequences"
+        autogen: true
+        diagrams_needed: true
+        diagram_types:
+          - flowchart
+    related_pages:
+      - deepwiki-skill_01_overview
+      - deepwiki-skill_03_workflow-phases
+
+  - id: deepwiki-skill_03_workflow-phases
+    title: "Workflow Phases"
+    filename: "03_workflow-phases.md"
+    description: "Detailed documentation of all six workflow phases"
+    source_files:
+      - "skills/wiki/references/workflow/repo-scan.md"
+      - "skills/wiki/references/workflow/toc-design.md"
+      - "skills/wiki/references/workflow/doc-write.md"
+      - "skills/wiki/references/workflow/validate-docs.md"
+      - "skills/wiki/references/workflow/doc-summary.md"
+      - "skills/wiki/references/workflow/incremental-sync.md"
+    sections:
+      - id: deepwiki-skill_03_workflow-phases_repo-scan
+        title: "Phase 1: Repository Scan"
+        description: "Context collection phase that analyzes repository structure"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_03_workflow-phases_toc-design
+        title: "Phase 2: TOC Design"
+        description: "Table of contents generation based on code analysis"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_03_workflow-phases_doc-write
+        title: "Phase 3: Document Writing"
+        description: "Page generation with evidence-based citations and diagrams"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_03_workflow-phases_validate-docs
+        title: "Phase 4: Document Validation"
+        description: "Structure and Mermaid diagram validation"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_03_workflow-phases_doc-summary
+        title: "Phase 5: Summary Generation"
+        description: "SUMMARY.md report creation"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_03_workflow-phases_incremental-sync
+        title: "Phase 6: Incremental Sync"
+        description: "Change detection and selective update for existing documentation"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+    related_pages:
+      - deepwiki-skill_02_architecture
+      - deepwiki-skill_04_python-scripts
+
+  - id: deepwiki-skill_04_python-scripts
+    title: "Python Scripts"
+    filename: "04_python-scripts.md"
+    description: "Documentation of all Python utility scripts used in the workflow"
+    source_files:
+      - "skills/wiki/scripts/collect_context.py"
+      - "skills/wiki/scripts/collect_sync_context.py"
+      - "skills/wiki/scripts/collect_update_context.py"
+      - "skills/wiki/scripts/read_files.py"
+      - "skills/wiki/scripts/validate_docs_structure.py"
+      - "skills/wiki/scripts/validate_mermaid.py"
+      - "skills/wiki/scripts/generate_summary.py"
+      - "skills/wiki/scripts/collect_git_diff.py"
+      - "skills/wiki/scripts/get_section_update_diff.py"
+    sections:
+      - id: deepwiki-skill_04_python-scripts_context-collection
+        title: "Context Collection Scripts"
+        description: "Scripts for collecting repository and sync context (collect_context.py, collect_sync_context.py, collect_update_context.py)"
+        autogen: true
+        source_files:
+          - "skills/wiki/scripts/collect_context.py"
+          - "skills/wiki/scripts/collect_sync_context.py"
+          - "skills/wiki/scripts/collect_update_context.py"
+        diagrams_needed: true
+        diagram_types:
+          - flowchart
+      - id: deepwiki-skill_04_python-scripts_file-utilities
+        title: "File Utilities"
+        description: "Scripts for reading files with line numbers and git diff operations (read_files.py, collect_git_diff.py, get_section_update_diff.py)"
+        autogen: true
+        source_files:
+          - "skills/wiki/scripts/read_files.py"
+          - "skills/wiki/scripts/collect_git_diff.py"
+          - "skills/wiki/scripts/get_section_update_diff.py"
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_04_python-scripts_validation
+        title: "Validation Scripts"
+        description: "Scripts for validating document structure and Mermaid diagrams (validate_docs_structure.py, validate_mermaid.py)"
+        autogen: true
+        source_files:
+          - "skills/wiki/scripts/validate_docs_structure.py"
+          - "skills/wiki/scripts/validate_mermaid.py"
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_04_python-scripts_summary-generation
+        title: "Summary Generation"
+        description: "Script for generating documentation summary (generate_summary.py)"
+        autogen: true
+        source_files:
+          - "skills/wiki/scripts/generate_summary.py"
+        diagrams_needed: false
+        diagram_types: []
+    related_pages:
+      - deepwiki-skill_03_workflow-phases
+      - deepwiki-skill_05_policies
+
+  - id: deepwiki-skill_05_policies
+    title: "Documentation Policies"
+    filename: "05_policies.md"
+    description: "Reference policies for evidence citation, Mermaid diagrams, page templates, and validation"
+    source_files:
+      - "skills/wiki/references/evidence_citation_policy.md"
+      - "skills/wiki/references/mermaid_policy.md"
+      - "skills/wiki/references/page_template.md"
+      - "skills/wiki/references/validation_policy.md"
+      - "skills/wiki/references/doc_update_policy.md"
+      - "skills/wiki/references/toc_schema.md"
+    sections:
+      - id: deepwiki-skill_05_policies_evidence-citation
+        title: "Evidence Citation Policy"
+        description: "Rules for source code citations with line numbers and URLs"
+        autogen: true
+        source_files:
+          - "skills/wiki/references/evidence_citation_policy.md"
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_05_policies_mermaid
+        title: "Mermaid Diagram Policy"
+        description: "Rules and best practices for creating Mermaid diagrams"
+        autogen: true
+        source_files:
+          - "skills/wiki/references/mermaid_policy.md"
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_05_policies_page-template
+        title: "Page Template"
+        description: "Page structure with PAGE_ID and AUTOGEN markers"
+        autogen: true
+        source_files:
+          - "skills/wiki/references/page_template.md"
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_05_policies_validation
+        title: "Validation Policy"
+        description: "Structure validation rules and requirements"
+        autogen: true
+        source_files:
+          - "skills/wiki/references/validation_policy.md"
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_05_policies_toc-schema
+        title: "TOC Schema"
+        description: "YAML schema specification for toc.yaml files"
+        autogen: true
+        source_files:
+          - "skills/wiki/references/toc_schema.md"
+        diagrams_needed: false
+        diagram_types: []
+    related_pages:
+      - deepwiki-skill_03_workflow-phases
+
+notes:
+  - "This documentation covers the deepwiki-skill agent skill for wiki documentation generation"
+  - "The skill supports multiple AI agents including Claude Code, Gemini CLI, and Codex"
+  - "Python 3.12+ and Node.js (for Mermaid CLI) are required dependencies"

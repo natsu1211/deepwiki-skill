@@ -1,0 +1,2 @@
+# Requirements for wiki generation scripts
+PyYAML>=6.0

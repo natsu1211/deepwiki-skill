@@ -1,0 +1,254 @@
+# TOC Template for Wiki Generation
+# Replace placeholders with actual values
+
+project:
+  name: "{PROJECT_NAME}"
+  description: "{PROJECT_DESCRIPTION}"
+  api_docs_source: "{API_DOCS_DIR}"  # Optional, e.g., "docs/api"
+  repo_base_url: "{REPO_BASE_URL}"  # e.g., https://github.com/owner/repo/blob
+  ref_commit_hash: "{COMMIT_HASH}"  # From: git rev-parse HEAD
+  updated_at: "{DATE}"  # YYYY-MM-DD
+
+pages:
+  # ============================================================
+  # Page 1: Overview
+  # ============================================================
+  - id: {repo}_01_overview
+    title: "Overview"
+    filename: "01_overview.md"
+    description: "Project introduction and key features"
+
+    source_files:
+      - "README.md"
+      - "package.json"  # or requirements.txt, Cargo.toml, etc.
+
+    sections:
+      - id: {repo}_01_overview_introduction
+        title: "Introduction"
+        description: "Brief introduction to the project purpose and goals"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+
+      - id: {repo}_01_overview_features
+        title: "Key Features"
+        description: "List and explain main features"
+        autogen: true
+        diagrams_needed: true
+        diagram_types: ["flowchart"]
+
+      - id: {repo}_01_overview_tech-stack
+        title: "Technology Stack"
+        description: "Technologies and frameworks used"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+
+    related_pages:
+      - {repo}_02_architecture
+      - {repo}_03_getting-started
+
+  # ============================================================
+  # Page 2: Architecture
+  # ============================================================
+  - id: {repo}_02_architecture
+    title: "Architecture"
+    filename: "02_architecture.md"
+    description: "System architecture and design patterns"
+
+    source_files:
+      - "src/**/*.{ext}"  # Main source files
+
+    sections:
+      - id: {repo}_02_architecture_overview
+        title: "Architecture Overview"
+        description: "High-level system architecture"
+        autogen: true
+        diagrams_needed: true
+        diagram_types: ["flowchart", "class"]
+
+      - id: {repo}_02_architecture_components
+        title: "Core Components"
+        description: "Main components and their responsibilities"
+        autogen: true
+        diagrams_needed: true
+        diagram_types: ["class"]
+
+      - id: {repo}_02_architecture_data-flow
+        title: "Data Flow"
+        description: "How data flows through the system"
+        autogen: true
+        diagrams_needed: true
+        diagram_types: ["flowchart", "sequence"]
+
+    related_pages:
+      - {repo}_01_overview
+      - {repo}_04_api
+
+  # ============================================================
+  # Page 3: Getting Started
+  # ============================================================
+  - id: {repo}_03_getting-started
+    title: "Getting Started"
+    filename: "03_getting-started.md"
+    description: "Installation and setup guide"
+
+    source_files:
+      - "README.md"
+      - "package.json"
+      - "Makefile"
+      - "docker-compose.yml"
+
+    sections:
+      - id: {repo}_03_getting-started_prerequisites
+        title: "Prerequisites"
+        description: "Required tools and dependencies"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+
+      - id: {repo}_03_getting-started_installation
+        title: "Installation"
+        description: "Step-by-step installation guide"
+        autogen: true
+        diagrams_needed: true
+        diagram_types: ["flowchart"]
+
+      - id: {repo}_03_getting-started_configuration
+        title: "Configuration"
+        description: "Configuration options and environment setup"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+
+      - id: {repo}_03_getting-started_quick-start
+        title: "Quick Start"
+        description: "Minimal steps to get running"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+
+    related_pages:
+      - {repo}_01_overview
+      - {repo}_05_configuration
+
+  # ============================================================
+  # Page 4: API Reference (Optional)
+  # ============================================================
+  - id: {repo}_04_api
+    title: "API Reference"
+    filename: "04_api.md"
+    description: "API endpoints and interfaces"
+
+    source_files:
+      - "src/api/**/*.{ext}"
+      - "docs/api/**/*.md"
+
+    sections:
+      - id: {repo}_04_api_overview
+        title: "API Overview"
+        description: "API design and conventions"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+
+      - id: {repo}_04_api_endpoints
+        title: "Endpoints"
+        description: "Available API endpoints"
+        autogen: true
+        diagrams_needed: true
+        diagram_types: ["sequence"]
+
+      - id: {repo}_04_api_authentication
+        title: "Authentication"
+        description: "Authentication and authorization"
+        autogen: true
+        diagrams_needed: true
+        diagram_types: ["sequence"]
+
+    related_pages:
+      - {repo}_02_architecture
+
+  # ============================================================
+  # Page 5: Configuration (Optional)
+  # ============================================================
+  - id: {repo}_05_configuration
+    title: "Configuration"
+    filename: "05_configuration.md"
+    description: "Configuration options and settings"
+
+    source_files:
+      - "config/**/*"
+      - ".env.example"
+      - "src/config/**/*.{ext}"
+
+    sections:
+      - id: {repo}_05_configuration_overview
+        title: "Configuration Overview"
+        description: "How configuration is structured"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+
+      - id: {repo}_05_configuration_environment
+        title: "Environment Variables"
+        description: "Required and optional environment variables"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+
+      - id: {repo}_05_configuration_options
+        title: "Configuration Options"
+        description: "All available configuration options"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+
+    related_pages:
+      - {repo}_03_getting-started
+
+  # ============================================================
+  # Page 6: Development Guide (Optional)
+  # ============================================================
+  - id: {repo}_06_development
+    title: "Development Guide"
+    filename: "06_development.md"
+    description: "Guide for contributors and developers"
+
+    source_files:
+      - "CONTRIBUTING.md"
+      - "Makefile"
+      - "package.json"
+      - "tests/**/*"
+
+    sections:
+      - id: {repo}_06_development_setup
+        title: "Development Setup"
+        description: "Setting up development environment"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+
+      - id: {repo}_06_development_testing
+        title: "Testing"
+        description: "How to run and write tests"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+
+      - id: {repo}_06_development_code-style
+        title: "Code Style"
+        description: "Coding conventions and linting"
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+
+    related_pages:
+      - {repo}_03_getting-started
+
+notes:
+  - "This is a template - customize pages based on project needs"
+  - "Remove optional pages that don't apply to your project"
+  - "Add project-specific pages as needed"
+  - "Replace {repo} with actual repository name"
+  - "Replace {ext} with project's primary file extension"
