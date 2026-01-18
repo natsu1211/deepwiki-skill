@@ -2,12 +2,37 @@
   "summary": {
     "pages_validated": 6,
     "pages_missing": 0,
-    "sections_validated": 24,
+    "sections_validated": 30,
     "sections_missing": 0,
     "total_errors": 0,
-    "total_warnings": 0,
+    "total_warnings": 3,
     "is_valid": true
   },
   "errors": [],
-  "warnings": []
+  "warnings": [
+    {
+      "file": "04_scripts.md",
+      "line": 206,
+      "severity": "warning",
+      "category": "structure",
+      "message": "Multiple H1 headings found",
+      "fix_hint": "Use H2 (##) for section headings, reserve H1 for page title only"
+    },
+    {
+      "file": "04_scripts.md",
+      "line": 209,
+      "severity": "warning",
+      "category": "structure",
+      "message": "Multiple H1 headings found",
+      "fix_hint": "Use H2 (##) for section headings, reserve H1 for page title only"
+    },
+    {
+      "file": "04_scripts.md",
+      "line": 212,
+      "severity": "warning",
+      "category": "structure",
+      "message": "Multiple H1 headings found",
+      "fix_hint": "Use H2 (##) for section headings, reserve H1 for page title only"
+    }
+  ]
 }

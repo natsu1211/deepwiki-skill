@@ -4,40 +4,38 @@
 
 The following files were used as context for generating this wiki page:
 
-- [README.md:1-257](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L1-L257)
-- [SKILL.md:1-97](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/skills/wiki/SKILL.md#L1-L97)
-- [gen.md:1-27](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/commands/gen.md#L1-L27)
+- [README.md:1-290](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L1-L290)
+- [SKILL.md:1-83](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L1-L83)
+- [plugin.json:1-8](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/.claude-plugin/plugin.json#L1-L8)
 
 </details>
 
 # Overview
 
-> **Related Pages**: [[Architecture|02_architecture.md]], [[Workflow Phases|03_workflow-phases.md]]
+> **Related Pages**: [[Architecture|02_architecture.md]], [[Workflow Phases|03_workflow.md]]
 
 ---
 
 <!-- BEGIN:AUTOGEN deepwiki-skill_01_overview_introduction -->
 ## Introduction
 
-**deepwiki-skill** is an agent skill for Claude Code and other AI agents that supports agent skills, designed to automatically generate comprehensive, wiki-style documentation for any codebase ([README.md:3](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L3)).
+deepwiki-skill is an agent skill for Claude Code and other AI agents that automatically generates comprehensive, wiki-style documentation for any codebase ([README.md:3](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L3)). It is designed as a reusable skill that works across multiple AI agents, not as a standalone agent ([README.md:7](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L7)).
 
-This skill provides a complete workflow for generating and updating wiki-style documentation with evidence-based citations and Mermaid diagram validation ([SKILL.md:9](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/skills/wiki/SKILL.md#L9)).
+The skill provides a complete workflow for generating and updating wiki-style documentation with evidence-based citations and Mermaid diagram validation ([SKILL.md:9](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L9)).
 
 ### Why Use deepwiki-skill
 
-The skill addresses several key documentation challenges ([README.md:5-11](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L5-L11)):
+The project addresses several key documentation challenges:
 
 | Benefit | Description |
 |---------|-------------|
-| Standard Agent Skill | Not another standalone agent, but a reusable skill that works across multiple AI agents ([README.md:7](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L7)) |
-| Zero Configuration Hassle | Leverage your existing subscription without complex setup ([README.md:8](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L8)) |
-| Evidence-Based & Hallucination-Free | Every key statement includes precise line-level citations from source code ([README.md:9](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L9)) |
-| Manual Structure Control | Available to take full control of document structure, solving the problem of uncontrollable auto-generated content ([README.md:10](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L10)) |
-| CI/CD Ready | Built-in incremental updates feature make it easy to deploy in CI/CD pipelines, keeping docs synchronized with code changes ([README.md:11](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L11)) |
+| Standard Agent Skill | Works across multiple AI agents as a reusable skill ([README.md:7](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L7)) |
+| Zero Configuration | Leverages existing subscriptions without complex setup ([README.md:8](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L8)) |
+| Evidence-Based | Every key statement includes precise line-level citations from source code ([README.md:9](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L9)) |
+| Manual Structure Control | Full control of document structure, solving the problem of uncontrollable auto-generated content ([README.md:10](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L10)) |
+| CI/CD Ready | Built-in incremental updates feature for easy deployment in CI/CD pipelines ([README.md:11](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L11)) |
 
-The skill can be used for generating documentation for a new project, updating existing documentation after code changes, creating or refining a wiki TOC for a codebase, and obtaining a comprehensive overview of an unfamiliar project ([SKILL.md:3](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/skills/wiki/SKILL.md#L3)).
-
-Sources: [README.md:1-11](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L1-L11), [SKILL.md:1-9](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/skills/wiki/SKILL.md#L1-L9)
+Sources: [README.md:1-11](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L1-L11), [SKILL.md:8-9](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L8-L9)
 <!-- END:AUTOGEN deepwiki-skill_01_overview_introduction -->
 
 ---
@@ -45,141 +43,152 @@ Sources: [README.md:1-11](https://github.com/natsu1211/deepwiki-skill/blob/38f3e
 <!-- BEGIN:AUTOGEN deepwiki-skill_01_overview_key-features -->
 ## Key Features
 
-The skill provides the following key capabilities ([README.md:13-20](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L13-L20)):
+deepwiki-skill provides a comprehensive set of features for documentation generation:
 
 | Feature | Description |
 |---------|-------------|
-| Evidence-Based Documentation | Every statement traced back to source files with line numbers ([README.md:15](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L15)) |
-| Mermaid Diagram Support | Generate and validate flowcharts, sequence diagrams, class diagrams, and more ([README.md:16](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L16)) |
-| Flexible Execution Modes | Full automatic, Table of Contents file based, or incremental updates ([README.md:17](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L17)) |
-| Parallel Processing | Subagents for faster documentation generation and better context isolation ([README.md:18](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L18)) |
-| Smart Code Analysis | Detects multiple programming languages, handles encoding detection, filters binary files ([README.md:19](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L19)) |
-| Multi-Language & Markdown-Based Output | Output as Markdown, simple control over output language ([README.md:20](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L20)) |
+| Evidence-Based Documentation | Every statement traced back to source files with line numbers ([README.md:15](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L15)) |
+| Mermaid Diagram Support | Generate and validate flowcharts, sequence diagrams, class diagrams, and more ([README.md:16](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L16)) |
+| Flexible Execution Modes | Fully automatic, TOC-file-based, or incremental updates ([README.md:17](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L17)) |
+| Parallel Processing | Subagents for faster documentation generation and better context isolation ([README.md:18](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L18)) |
+| Smart Code Analysis | Detects multiple programming languages, handles encoding detection, filters binary files ([README.md:19](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L19)) |
+| Multi-Language Output | Output as Markdown with simple control over output language ([README.md:20](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L20)) |
 
 ### Execution Modes
 
-The skill supports multiple execution modes, each tailored for different use cases ([README.md:208-215](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L208-L215), [SKILL.md:29-36](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/skills/wiki/SKILL.md#L29-L36)):
+The skill supports multiple execution modes to fit different use cases ([SKILL.md:29-36](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L29-L36)):
 
 | Mode | Phases | Use Case |
 |------|--------|----------|
-| Automatic | 1 to 2 to 3 to 4 to 5 | Generate complete documentation from scratch ([README.md:212](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L212)) |
-| Structure-only | 1 to 2 | Design TOC without generating content ([README.md:213](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L213)) |
-| TOC-based | 3 to 4 to 5 | Generate docs from existing TOC yaml file ([README.md:214](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L214)) |
-| Incremental | 6 to 3 to 4 to 5 | Update docs after code changes ([README.md:215](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L215)) |
+| Automatic | 1 - 2 - 3 - 4 - 5 | Generate complete documentation from scratch ([README.md:268](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L268)) |
+| Structure-only | 1 - 2 | Design TOC without generating content ([README.md:269](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L269)) |
+| TOC-based | 3 - 4 - 5 | Generate docs from existing TOC yaml file ([README.md:270](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L270)) |
+| Incremental | 6 - 3 - 4 - 5 | Update docs after code changes ([README.md:271](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L271)) |
 
-### Workflow Phases
-
-The documentation generation operates through six distinct phases ([README.md:168-206](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L168-L206)):
-
-| Phase | Name | Purpose |
-|-------|------|---------|
-| 1 | Repository Scan | Analyzes repository structure, detects programming languages, counts files, reads existing documentation ([README.md:172-176](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L172-L176)) |
-| 2 | TOC Design | Designs wiki structure based on code analysis, generates hierarchical Table of Contents ([README.md:178-182](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L178-L182)) |
-| 3 | Document Writing | Generates actual documentation pages with evidence-based citations and Mermaid diagrams ([README.md:184-188](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L184-L188)) |
-| 4 | Document Validation | Validates document structure, checks Mermaid diagram syntax, provides error reports ([README.md:190-194](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L190-L194)) |
-| 5 | Summary Generation | Creates SUMMARY.md report with all generated pages and validation results ([README.md:196-200](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L196-L200)) |
-| 6 | Incremental Sync | Detects code changes via git diff, identifies impacted pages, updates only affected sections ([README.md:202-206](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L202-L206)) |
-
-Sources: [README.md:13-20](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L13-L20), [README.md:168-215](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L168-L215), [SKILL.md:16-36](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/skills/wiki/SKILL.md#L16-L36)
+Sources: [README.md:13-21](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L13-L21), [README.md:264-271](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L264-L271), [SKILL.md:27-36](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L27-L36)
 <!-- END:AUTOGEN deepwiki-skill_01_overview_key-features -->
 
 ---
 
-<!-- BEGIN:AUTOGEN deepwiki-skill_01_overview_quick-start -->
-## Quick Start
+<!-- BEGIN:AUTOGEN deepwiki-skill_01_overview_installation -->
+## Installation
 
 ### Prerequisites
 
-Before using deepwiki-skill, ensure you have the following installed ([README.md:24-29](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L24-L29)):
+Before installing deepwiki-skill, ensure you have the following:
 
-- Python >= 3.12
-- Node.js and Mermaid CLI (for diagram validation)
-
-To install the Mermaid CLI:
+- Python >=3.12 ([README.md:25](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L25))
+- Node.js and Mermaid CLI for diagram validation ([README.md:26-29](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L26-L29))
 
 ```bash
 npm install -g @mermaid-js/mermaid-cli
 ```
 
-### Installation
+### Claude Code
 
-While deepwiki-skill works with any coding agent that supports agent skills, Claude Code currently offers the best subagent support for optimal documentation generation ([README.md:33](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L33)).
+Claude Code currently offers the best subagent support for optimal documentation generation and is recommended for the best experience ([README.md:33](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L33)).
 
-#### Claude Code
-
-In Claude Code, register the marketplace and install the plugin ([README.md:35-42](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L35-L42)):
+To install in Claude Code, register the marketplace and install the plugin ([README.md:37-42](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L37-L42)):
 
 ```
-/plugin marketplace add natsu1211/deepwiki-skill-marketplace
+/plugin marketplace add natsu1211/deepwiki-skill
 /plugin install deepwiki-skill@deepwiki-skill-marketplace
 ```
 
-Execute `/skills` command in Claude Code to verify the `wiki` skill appears in the list ([README.md:44](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L44)).
+After installation, execute `/skills` command in Claude Code to verify the `wiki` skill appears in the list ([README.md:44](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L44)).
 
-#### Gemini CLI
+### Gemini CLI
 
-For Gemini CLI version >= 0.24.0, copy the skills folder into `~/.gemini` (user scope) or `project_dir/.gemini` (workspace scope) ([README.md:46-62](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L46-L62)):
+For Gemini CLI, version >=0.24.0 is required to use agent skills. Manual installation will not install subagents, and generation quality may degrade due to the limited context window ([README.md:47](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L47)).
+
+Manual installation ([README.md:55-60](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L55-L60)):
 
 ```bash
 git clone https://github.com/natsu1211/deepwiki-skill && cd deepwiki-skill
 cp -R skills ~/.gemini
 ```
 
-#### Codex
+### Codex
 
-Copy the skills folder into `~/.codex` (user scope) or `project_dir/.codex` (workspace scope) ([README.md:64-74](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L64-L74)):
+For Codex, generation quality may degrade due to limited context window ([README.md:65](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L65)).
+
+Copy the skills folder into `~/.codex` (user scope) or `project_dir/.codex` (workspace scope) ([README.md:67-72](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L67-L72)):
 
 ```bash
 git clone https://github.com/natsu1211/deepwiki-skill && cd deepwiki-skill
 cp -R skills ~/.codex
 ```
 
-### Usage
+Sources: [README.md:22-75](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L22-L75)
+<!-- END:AUTOGEN deepwiki-skill_01_overview_installation -->
 
-You can invoke the skill by writing something like "Use wiki skill to generate wiki documentation" or "Invoke wiki skill" to tell the agent to invoke the skill ([README.md:78](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L78)).
+---
 
-The custom command `gen` is also provided to parse arguments and explicitly invoke the skill, making inputs more concise while expressing intent more precisely ([README.md:80](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L80)).
+<!-- BEGIN:AUTOGEN deepwiki-skill_01_overview_quick-start -->
+## Quick Start
 
-#### Command Examples
+### Basic Usage
 
-| Command | Description |
-|---------|-------------|
-| `/deepwiki-skill:gen` | Fully automatic wiki document generation ([README.md:83-85](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L83-L85)) |
-| `/deepwiki-skill:gen --structure` | Generate TOC file only ([README.md:87-89](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L87-L89)) |
-| `/deepwiki-skill:gen docs/wiki/toc.yaml` | Generate from existing TOC ([README.md:91-95](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L91-L95)) |
-| `/deepwiki-skill:gen docs/wiki/toc.yaml --update` | Update documentation after code changes ([README.md:97-100](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L97-L100)) |
-| `/deepwiki-skill:gen --output ./documentation/wiki` | Specify output directory ([README.md:102-105](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L102-L105)) |
-| `/deepwiki-skill:gen --language zh-CN` | Generate documentation in Chinese ([README.md:107-110](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L107-L110)) |
+You can invoke the skill by writing natural language prompts like "Use wiki skill to generate wiki documentation" or "Invoke wiki skill to update documents at docs/wiki based on docs/wiki/toc.yaml" ([README.md:78](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L78)).
 
-#### Available Arguments
+A custom command `gen` is also provided to parse arguments and explicitly invoke the skill, allowing CLI-style usage with more concise inputs ([README.md:80](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L80)).
+
+### Command Examples
+
+**Fully automatic wiki document generation** ([README.md:82-85](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L82-L85)):
+```bash
+/deepwiki-skill:gen
+```
+
+**Generate TOC file only** ([README.md:87-90](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L87-L90)):
+```bash
+/deepwiki-skill:gen --structure
+```
+
+**Generate from existing TOC** ([README.md:92-95](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L92-L95)):
+```bash
+/deepwiki-skill:gen docs/wiki/toc.yaml
+```
+
+**Update documentation after changes** ([README.md:97-100](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L97-L100)):
+```bash
+/deepwiki-skill:gen docs/wiki/toc.yaml --update
+```
+
+**Specify output directory** ([README.md:102-105](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L102-L105)):
+```bash
+/deepwiki-skill:gen --output ./documentation/wiki
+```
+
+**Generate documentation in a specific language** ([README.md:107-110](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L107-L110)):
+```bash
+/deepwiki-skill:gen --language zh-CN
+```
+
+**Include or exclude specific files** ([README.md:112-120](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L112-L120)):
+```bash
+/deepwiki-skill:gen --include "src/**/*.ts"
+/deepwiki-skill:gen --exclude "**/*.test.js"
+```
+
+**Run from CLI in headless mode** ([README.md:127-130](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L127-L130)):
+```bash
+claude -p "/deepwiki-skill:gen" --dangerously-skip-permissions
+```
+
+### Available Arguments
 
 | Argument | Description |
 |----------|-------------|
-| `<toc.yaml>` | Path to existing TOC file ([gen.md:18](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/commands/gen.md#L18)) |
-| `--structure` | Generate only TOC structure, stop before generating docs ([gen.md:19](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/commands/gen.md#L19)) |
-| `--update` | Incremental update mode (requires TOC file path) ([gen.md:20](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/commands/gen.md#L20)) |
-| `--output <dir>` | Output directory (default: `./docs/wiki/`) ([gen.md:21](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/commands/gen.md#L21)) |
-| `--language <locale>` | Output language (default: `en-US`) ([gen.md:22](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/commands/gen.md#L22)) |
-| `--include <pattern>` | Include files matching pattern ([gen.md:23](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/commands/gen.md#L23)) |
-| `--exclude <pattern>` | Exclude files matching pattern ([gen.md:24](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/commands/gen.md#L24)) |
+| `<toc.yaml>` | Path to existing TOC file ([README.md:138](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L138)) |
+| `--structure` | Generate only TOC structure, stop before generating docs ([README.md:139](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L139)) |
+| `--update` | Incremental update mode, requires TOC file path ([README.md:140](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L140)) |
+| `--output <dir>` | Output directory, default: `./docs/wiki/` ([README.md:141](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L141)) |
+| `--language <locale>` | Output language, default: `en-US`, supports almost any locale code ([README.md:142](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L142)) |
+| `--include <pattern>` | Include files matching pattern, can use multiple times ([README.md:143](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L143)) |
+| `--exclude <pattern>` | Exclude files matching pattern, can use multiple times ([README.md:144](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L144)) |
 
-### Output Structure
-
-The generated documentation follows this structure ([README.md:217-229](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L217-L229)):
-
-```
-docs/wiki/
-├── toc.yaml              # Table of Contents definition
-├── SUMMARY.md            # Documentation summary report
-├── 01_overview.md        # Generated pages
-├── 02_architecture.md
-├── 03_components/
-│   ├── 01_module_a.md
-│   └── 02_module_b.md
-└── ...
-```
-
-Sources: [README.md:22-125](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L22-L125), [README.md:217-229](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/README.md#L217-L229), [gen.md:14-24](https://github.com/natsu1211/deepwiki-skill/blob/38f3e4f642cfbc9511d4cc1421b2c1ded9febd97/commands/gen.md#L14-L24)
+Sources: [README.md:76-145](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L76-L145)
 <!-- END:AUTOGEN deepwiki-skill_01_overview_quick-start -->
 
 ---
