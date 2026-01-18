@@ -37,7 +37,7 @@
 In Claude Code, register the marketplace and install this plugin
 
 ```
-/plugin marketplace add natsu1211/deepwiki-skill-marketplace
+/plugin marketplace add natsu1211/deepwiki-skill
 /plugin install deepwiki-skill@deepwiki-skill-marketplace
 ```
 
