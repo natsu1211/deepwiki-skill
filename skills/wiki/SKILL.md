@@ -35,20 +35,6 @@ This skill supports multiple execution modes and each mode has different executi
 | **TOC-based** | 3 → 4 → 5 | Generate docs from existing `toc.yaml` |
 | **Incremental** | 6 → 3 → 4 → 5 | Update docs after code changes |
 
-### References
-**This section is available only when subagent is not supported**
-
-Read these references based on your current task:
-
-| Reference | When to Load | Purpose |
-|-----------|--------------|---------|
-| `/references/toc_schema.md` | When designing TOC (Phase 2) | YAML schema specification |
-| `/references/evidence_citation.md` | When writing docs (Phase 3) | Source citation rules |
-| `/references/page_template.md` | When writing docs (Phase 3) | Page structure and markers |
-| `/references/mermaid_policy.md` | When creating/validating diagrams | Mermaid syntax rules |
-| `/references/validation_policy.md` | When validating docs (Phase 4) | Structure validation rules |
-| `/references/doc_update_policy.md` | When doing incremental updates (Phase 6) | Update algorithm details |
-
 ### Subagent Invocation
 **This section is available only when subagent is supported**
 
