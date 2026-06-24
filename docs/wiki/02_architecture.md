@@ -1,286 +1,139 @@
 <!-- PAGE_ID: deepwiki-skill_02_architecture -->
 <details>
-<summary>Relevant source files</summary>
+<summary>📚 Relevant source files</summary>
 
 The following files were used as context for generating this wiki page:
 
-- [SKILL.md:1-83](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L1-L83)
-- [gen.md:1-27](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/commands/gen.md#L1-L27)
-- [workflow-runner.md:1-51](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/agents/workflow-runner.md#L1-L51)
+- [SKILL.md:1-83](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L1-L83)
+- [workflow-runner.agent.md:1-55](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/agents/workflow-runner.agent.md#L1-L55)
+- [gen-wiki.prompt.md:1-31](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/prompts/gen-wiki.prompt.md#L1-L31)
+- [apm.yml:1-22](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/apm.yml#L1-L22)
 
 </details>
 
 # Architecture
 
-> **Related Pages**: [[Overview|01_overview.md]], [[Workflow Phases|03_workflow.md]]
+> **Related Pages**: [[Overview|01_overview.md]], [[Workflow Phases and Execution Modes|03_workflow.md]]
 
 ---
 
 <!-- BEGIN:AUTOGEN deepwiki-skill_02_architecture_overview -->
-## System Overview
+## System Architecture Overview
 
-This section provides a high-level view of the deepwiki-skill architecture and how its components interact to generate comprehensive wiki documentation.
+deepwiki-skill is composed of three cooperating apm primitives that turn a single user command into validated, evidence-based wiki documentation: a command prompt that parses arguments, a skill that orchestrates the workflow, and an agent that executes individual phases. These primitives are bundled as a single apm `hybrid` package ([apm.yml:9-10](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/apm.yml#L9-L10)).
 
-The deepwiki-skill follows a layered architecture with three primary components: the command interface, the skill definition, and the workflow runner agent. The command interface (`commands/gen.md`) parses user input and determines the execution mode ([gen.md:7-12](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/commands/gen.md#L7-L12)). The skill definition (`skills/wiki/SKILL.md`) orchestrates the workflow by defining phases and execution order ([SKILL.md:16-25](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L16-L25)). The workflow runner agent executes individual phases according to their specifications ([workflow-runner.md:1-6](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/agents/workflow-runner.md#L1-L6)).
+The entry point is the `gen-wiki` prompt, whose only workflow step is to parse the CLI-style argument and delegate to the `wiki` skill to generate documentation for the current repository ([gen-wiki.prompt.md:30-31](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/prompts/gen-wiki.prompt.md#L30-L31)). The `wiki` skill (`SKILL.md`) is the orchestrator: it defines the workflow phases, selects an execution mode, and dispatches each phase to the `workflow-runner` agent when subagents are supported ([SKILL.md:11-25](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L11-L25)). The `workflow-runner` agent executes exactly one phase from its phase spec and produces that phase's declared outputs ([workflow-runner.agent.md:5-12](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/agents/workflow-runner.agent.md#L5-L12)).
+
+The diagram below shows how a user command flows through these layers to the documentation outputs.
 
 ```mermaid
 graph TD
     subgraph UserLayer
-        A["User Command"]
+        U["User Command"]
+        P["gen-wiki Prompt"]
     end
 
-    subgraph CommandInterface
-        B["gen.md Command Parser"]
+    subgraph Orchestration
+        S["wiki Skill (SKILL.md)"]
+        M{"Select Execution Mode"}
     end
 
-    subgraph SkillDefinition
-        C["SKILL.md Orchestrator"]
-        D["Execution Mode Selection"]
-    end
-
-    subgraph WorkflowExecution
-        E["Workflow Runner Agent"]
-        F["Phase 1: repo-scan"]
-        G["Phase 2: toc-design"]
-        H["Phase 3: doc-write"]
-        I["Phase 4: validate-docs"]
-        J["Phase 5: doc-summary"]
-        K["Phase 6: incremental-sync"]
+    subgraph Execution
+        A["workflow-runner Agent"]
+        PS["Phase Spec File"]
     end
 
     subgraph Outputs
-        L["toc.yaml"]
-        M["Wiki Pages"]
-        N["SUMMARY.md"]
+        O["toc.yaml / Wiki Pages / Reports"]
     end
 
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    E --> F
-    E --> G
-    E --> H
-    E --> I
-    E --> J
-    E --> K
-    F --> L
-    G --> L
-    H --> M
-    J --> N
+    U --> P
+    P --> S
+    S --> M
+    M --> A
+    A --> PS
+    PS --> O
 ```
 
-The workflow runner agent is a generic subagent responsible for executing exactly one phase at a time, loading only the files explicitly referenced in each phase specification ([workflow-runner.md:3-6](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/agents/workflow-runner.md#L3-L6)).
+When subagents are not supported, the skill falls back to reading each phase spec and reference file and executing the phases sequentially itself, rather than dispatching to the agent ([SKILL.md:14](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L14)).
 
-Sources: [SKILL.md:8-25](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L8-L25), [gen.md:1-12](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/commands/gen.md#L1-L12), [workflow-runner.md:1-8](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/agents/workflow-runner.md#L1-L8)
+Sources: [SKILL.md:11-25](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L11-L25), [gen-wiki.prompt.md:30-31](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/prompts/gen-wiki.prompt.md#L30-L31), [workflow-runner.agent.md:5-12](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/agents/workflow-runner.agent.md#L5-L12), [apm.yml:9-10](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/apm.yml#L9-L10)
 <!-- END:AUTOGEN deepwiki-skill_02_architecture_overview -->
 
 ---
 
-<!-- BEGIN:AUTOGEN deepwiki-skill_02_architecture_skill-definition -->
-## Skill Definition
+<!-- BEGIN:AUTOGEN deepwiki-skill_02_architecture_primitives -->
+## Core Primitives
 
-The skill definition in `SKILL.md` serves as the central orchestrator for the wiki generation workflow. It defines the complete set of workflow phases and determines how they are executed based on the selected mode.
+The architecture rests on three apm primitives, each authored as a Markdown file with YAML frontmatter under `.apm/`. The package declares its type as `hybrid` precisely because it bundles a skill, an agent, and a prompt together ([apm.yml:9-10](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/apm.yml#L9-L10)).
 
-### Workflow Phase Definitions
+| Primitive | File | Responsibility |
+|-----------|------|----------------|
+| Skill | `.apm/skills/wiki/SKILL.md` | Orchestrates the full workflow, defines phases and execution modes, and dispatches work ([SKILL.md:8-14](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L8-L14)) |
+| Agent | `.apm/agents/workflow-runner.agent.md` | Executes exactly one phase from its phase spec and produces declared outputs ([workflow-runner.agent.md:5-12](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/agents/workflow-runner.agent.md#L5-L12)) |
+| Prompt | `.apm/prompts/gen-wiki.prompt.md` | Parses CLI-style arguments and invokes the skill in the appropriate mode ([gen-wiki.prompt.md:2-3](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/prompts/gen-wiki.prompt.md#L2-L3)) |
 
-The skill defines six workflow phases, each with a unique identifier and specification file ([SKILL.md:16-25](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L16-L25)):
+The **wiki skill** is the heart of the system. Its description states it provides a complete workflow for generating and updating wiki-style documentation with evidence-based citations and Mermaid diagram validation ([SKILL.md:8-9](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L8-L9)). It instructs the runtime to fully execute the workflow until completion without asking for user confirmation ([SKILL.md:12](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L12)).
 
-| Phase | Phase ID | Phase Spec | Purpose |
-|-------|----------|------------|---------|
-| 1 | `repo-scan` | `/references/workflow/repo-scan.md` | Scan repository to get context for TOC design ([SKILL.md:20](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L20)) |
-| 2 | `toc-design` | `/references/workflow/toc-design.md` | Design TOC structure ([SKILL.md:21](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L21)) |
-| 3 | `doc-write` | `/references/workflow/doc-write.md` | Generate documentation pages ([SKILL.md:22](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L22)) |
-| 4 | `validate-docs` | `/references/workflow/validate-docs.md` | Validate diagrams and structure ([SKILL.md:23](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L23)) |
-| 5 | `doc-summary` | `/references/workflow/doc-summary.md` | Generate SUMMARY.md report ([SKILL.md:24](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L24)) |
-| 6 | `incremental-sync` | `/references/workflow/incremental-sync.md` | Detect TOC and source changes ([SKILL.md:25](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L25)) |
+The **workflow-runner agent** is deliberately narrow. It loads the phase specification from `phase_spec`, loads only the additional files that spec explicitly references, and produces the declared outputs and validations — explicitly avoiding improvised steps or unrelated references ([workflow-runner.agent.md:7-12](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/agents/workflow-runner.agent.md#L7-L12)). It treats the phase spec file as the source of truth, which must define a Goal, Inputs, Outputs, Scripts, Workflow, and Validation ([workflow-runner.agent.md:26-36](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/agents/workflow-runner.agent.md#L26-L36)). It accepts a defined set of inputs including `phase_id`, `phase_spec`, `repo_path`, `output_dir`, `toc_file`, `doc_dir`, `language`, and `mode` ([workflow-runner.agent.md:16-24](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/agents/workflow-runner.agent.md#L16-L24)).
 
-### Subagent Invocation
+The **gen-wiki prompt** is the thinnest layer. Its frontmatter describes it as parsing CLI-style arguments and invoking the skill in the appropriate execution mode ([gen-wiki.prompt.md:2-3](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/prompts/gen-wiki.prompt.md#L2-L3)), and its single workflow step is to parse the argument and use the `wiki` skill ([gen-wiki.prompt.md:30-31](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/prompts/gen-wiki.prompt.md#L30-L31)).
 
-When subagent support is available, the skill spawns workflow runner subagents with specific inputs for each phase ([SKILL.md:41-53](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L41-L53)):
+All three primitives share a language directive instructing output in the language specified by the locale code, defaulting to `en-US` ([SKILL.md:6](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L6), [gen-wiki.prompt.md:7](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/prompts/gen-wiki.prompt.md#L7), [workflow-runner.agent.md:23](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/agents/workflow-runner.agent.md#L23)).
 
-```
-subagent: deepwiki:workflow-runner
-inputs:
-  phase_id: "{phase_id}"
-  phase_spec: "absolute path of {phase_spec}"
-  repo_path: "{repo_path}"
-  output_dir: "{output_dir}"
-  toc_file: "{toc_file}"
-  page_id: "{page_id}"
-  language: "{language}"
-```
-
-### Parallel Execution for doc-write
-
-The `doc-write` phase supports parallel execution when subagent support is available. Instead of generating all pages sequentially, the skill spawns multiple subagents in foreground, one per page ([SKILL.md:55-58](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L55-L58)). The parallel execution rules require each subagent to generate exactly one page, run in foreground (not background), and wait for all subagents to complete before proceeding to validation ([SKILL.md:79-83](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L79-L83)).
-
-Sources: [SKILL.md:1-83](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L1-L83)
-<!-- END:AUTOGEN deepwiki-skill_02_architecture_skill-definition -->
+Sources: [SKILL.md:6-14](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L6-L14), [workflow-runner.agent.md:7-36](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/agents/workflow-runner.agent.md#L7-L36), [gen-wiki.prompt.md:2-31](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/prompts/gen-wiki.prompt.md#L2-L31), [apm.yml:9-10](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/apm.yml#L9-L10)
+<!-- END:AUTOGEN deepwiki-skill_02_architecture_primitives -->
 
 ---
 
-<!-- BEGIN:AUTOGEN deepwiki-skill_02_architecture_command-interface -->
-## Command Interface
+<!-- BEGIN:AUTOGEN deepwiki-skill_02_architecture_orchestration -->
+## Orchestration and Subagent Dispatch
 
-The command interface defined in `commands/gen.md` provides the user-facing entry point for wiki generation. It supports multiple invocation patterns that map to different execution modes.
-
-### Command Usage
-
-The command supports four primary usage patterns ([gen.md:7-12](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/commands/gen.md#L7-L12)):
-
-| Pattern | Mode |
-|---------|------|
-| `/deepwiki-local:gen` | Automatic mode: full pipeline |
-| `/deepwiki-local:gen --structure` | Structure-only mode: generate TOC only |
-| `/deepwiki-local:gen <toc.yaml>` | TOC-based mode: generate from existing TOC |
-| `/deepwiki-local:gen <toc.yaml> --update` | Incremental update mode: update based on changes |
-
-### Arguments
-
-The command accepts the following arguments ([gen.md:14-25](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/commands/gen.md#L14-L25)):
-
-| Argument | Description |
-|----------|-------------|
-| `<toc.yaml>` | Path to existing TOC file |
-| `--structure` | Generate only TOC structure, stop before docs |
-| `--update` | Incremental update mode (requires TOC file) |
-| `--output <dir>` | Output directory (default: `./docs/wiki/`) |
-| `--language <locale>` | Output language (default: `en-US`) |
-| `--include <pattern>` | Include files matching pattern |
-| `--exclude <pattern>` | Exclude files matching pattern |
-
-The command parses these arguments and uses the `wiki` skill to generate wiki documentation for the current repository ([gen.md:26-27](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/commands/gen.md#L26-L27)).
-
-Sources: [gen.md:1-27](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/commands/gen.md#L1-L27)
-<!-- END:AUTOGEN deepwiki-skill_02_architecture_command-interface -->
-
----
-
-<!-- BEGIN:AUTOGEN deepwiki-skill_02_architecture_workflow-runner -->
-## Workflow Runner Agent
-
-The workflow runner agent (`agents/workflow-runner.md`) is a generic subagent responsible for executing individual workflow phases. It follows a strict contract to ensure consistent and predictable phase execution.
-
-### Core Responsibilities
-
-The workflow runner executes exactly one phase per invocation by ([workflow-runner.md:3-6](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/agents/workflow-runner.md#L3-L6)):
-
-1. Loading the phase specification file from `phase_spec`
-2. Loading only the additional files that spec explicitly references (references/scripts/templates)
-3. Producing the declared outputs and validations
-
-### Input Parameters
-
-The workflow runner receives the following inputs ([workflow-runner.md:10-20](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/agents/workflow-runner.md#L10-L20)):
-
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `phase_id` | Yes | The workflow phase to run (must match a file in `skills/wiki/references/workflow/`) |
-| `phase_spec` | Yes | Absolute path to the phase spec file |
-| `repo_path` | Yes | Absolute path to the target repository |
-| `output_dir` | No | Documentation output directory (default: `docs/wiki`) |
-| `toc_file` | No | Path to `toc.yaml` |
-| `doc_dir` | No | Documentation directory containing `.md` files (defaults to `output_dir`) |
-| `language` | No | Language locale code of output (default: en-US) |
-| `mode` | No | Execution mode for phase-specific branching |
-
-### Phase Spec Contract
-
-Each phase specification file must define ([workflow-runner.md:22-32](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/agents/workflow-runner.md#L22-L32)):
-
-- **Goal**: A concise statement describing what the phase accomplishes
-- **Inputs**: Parameters the phase receives (table with Name, Required, Default, Description columns)
-- **Outputs**: Files or directories the phase produces (table with Path, Description columns)
-- **Scripts**: Available scripts with function signatures, parameters, and return values
-- **Workflow**: Step-by-step instructions to accomplish the goal
-- **Validation**: Concrete checks to run before declaring success
-
-### Execution Rules
-
-The workflow runner follows strict execution rules ([workflow-runner.md:34-51](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/agents/workflow-runner.md#L34-L51)):
-
-1. **Path Resolution**: Resolve `doc_dir` to `output_dir` if not specified, treat all relative paths as relative to workspace root
-2. **Reference Loading**: Load the phase spec first, then load only files listed under the References section
-3. **Output Discipline**: Produce only the outputs declared in the step spec, do not modify other files
-4. **Failure Handling**: Stop at the failing action and report the command/output that failed
-5. **Output Path Discipline**: Only create files at `output_dir` and its sub-directories
-
-Sources: [workflow-runner.md:1-51](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/agents/workflow-runner.md#L1-L51)
-<!-- END:AUTOGEN deepwiki-skill_02_architecture_workflow-runner -->
-
----
-
-<!-- BEGIN:AUTOGEN deepwiki-skill_02_architecture_execution-modes -->
-## Execution Modes
-
-The deepwiki-skill supports four execution modes, each designed for different use cases and executing a specific sequence of workflow phases.
-
-### Mode Overview
-
-The skill provides the following execution modes ([SKILL.md:27-36](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L27-L36)):
+The wiki skill orchestrates documentation generation by selecting an execution mode and dispatching the resulting phase sequence. The skill defines six workflow phases — `repo-scan`, `toc-design`, `doc-write`, `validate-docs`, `doc-summary`, and `incremental-sync` — each bound to a phase spec under `references/workflow/` ([SKILL.md:18-25](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L18-L25)). Each execution mode runs a different subset of phases in a defined order ([SKILL.md:31-36](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L31-L36)).
 
 | Mode | Phases | Description |
 |------|--------|-------------|
-| **Automatic** | 1 -> 2 -> 3 -> 4 -> 5 | Full pipeline for new documentation |
-| **Structure-only** | 1 -> 2 | Generate TOC only, stop before docs |
-| **TOC-based** | 3 -> 4 -> 5 | Generate docs from existing `toc.yaml` |
-| **Incremental** | 6 -> 3 -> 4 -> 5 | Update docs after code changes |
+| Automatic | 1 → 2 → 3 → 4 → 5 | Full pipeline for new documentation ([SKILL.md:33](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L33)) |
+| Structure-only | 1 → 2 | Generate TOC only, stop before docs ([SKILL.md:34](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L34)) |
+| TOC-based | 3 → 4 → 5 | Generate docs from existing `toc.yaml` ([SKILL.md:35](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L35)) |
+| Incremental | 6 → 3 → 4 → 5 | Update docs after code changes ([SKILL.md:36](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L36)) |
+
+When subagents are supported, the skill spawns a `deepwiki:workflow-runner` subagent per phase, passing inputs such as `phase_id`, `phase_spec`, `repo_path`, `output_dir`, `toc_file`, `page_id`, and `language` ([SKILL.md:41-53](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L41-L53)).
+
+The `doc-write` phase receives special handling for performance. Rather than generating all pages sequentially in a single subagent, the skill spawns multiple foreground subagents — one per page — by parsing `toc.yaml` to obtain the page list and dispatching a runner for each `page.id` ([SKILL.md:55-77](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L55-L77)). The following sequence illustrates this parallel dispatch.
 
 ```mermaid
-graph TD
-    subgraph Modes
-        AUTO["Automatic Mode"]
-        STRUCT["Structure-only Mode"]
-        TOC["TOC-based Mode"]
-        INCR["Incremental Mode"]
-    end
+sequenceDiagram
+    participant U as User
+    participant P as gen-wiki Prompt
+    participant S as wiki Skill
+    participant T as toc.yaml
+    participant R as workflow-runner
 
-    subgraph AutomaticFlow
-        A1["repo-scan"] --> A2["toc-design"]
-        A2 --> A3["doc-write"]
-        A3 --> A4["validate-docs"]
-        A4 --> A5["doc-summary"]
-    end
-
-    subgraph StructureFlow
-        S1["repo-scan"] --> S2["toc-design"]
-    end
-
-    subgraph TOCFlow
-        T1["doc-write"] --> T2["validate-docs"]
-        T2 --> T3["doc-summary"]
-    end
-
-    subgraph IncrementalFlow
-        I1["incremental-sync"] --> I2["doc-write"]
-        I2 --> I3["validate-docs"]
-        I3 --> I4["doc-summary"]
-    end
-
-    AUTO --> A1
-    STRUCT --> S1
-    TOC --> T1
-    INCR --> I1
+    U->>P: gen-wiki command
+    P->>S: Invoke skill
+    activate S
+    S->>S: Select execution mode
+    S->>T: Parse pages
+    activate T
+    T-->>S: Page list
+    deactivate T
+    Note over S,R: doc-write runs one subagent per page
+    S->>R: Spawn page subagent (page_id=1)
+    activate R
+    S->>R: Spawn page subagent (page_id=N)
+    R-->>S: Page complete
+    deactivate R
+    S->>S: Wait for all pages
+    S->>R: Proceed to validate-docs
+    deactivate S
 ```
 
-### Automatic Mode
+The parallel execution rules constrain this dispatch: each subagent generates exactly one page specified by `page_id`, all subagents run in the foreground rather than the background, the skill waits for all page subagents to complete before proceeding to the validation phase, and if any subagent fails a new subagent is re-spawned to finish that page ([SKILL.md:79-83](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L79-L83)).
 
-The automatic mode runs the complete pipeline (phases 1 through 5) for generating new documentation from scratch. It scans the repository, designs the TOC structure, writes all documentation pages, validates the output, and generates a summary report.
+On the execution side, the agent enforces strict discipline. It resolves `doc_dir` to `output_dir` when unset, treats relative paths as relative to the workspace root, produces only the outputs declared in the spec, and stops at the failing action on error while reporting the failed command and the minimal next action ([workflow-runner.agent.md:40-51](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/agents/workflow-runner.agent.md#L40-L51)). It also restricts file creation to `output_dir` and its subdirectories ([workflow-runner.agent.md:53-55](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/agents/workflow-runner.agent.md#L53-L55)).
 
-### Structure-only Mode
-
-The structure-only mode (triggered by `--structure` flag) runs only phases 1 and 2. It scans the repository and generates the `toc.yaml` file without producing any documentation pages. This mode is useful for reviewing and customizing the proposed structure before generating full documentation.
-
-### TOC-based Mode
-
-The TOC-based mode (triggered by providing a `toc.yaml` path without `--update`) skips repository scanning and TOC design. It generates documentation directly from an existing `toc.yaml` file, validates the output, and produces a summary. This mode is useful when using a manually crafted or previously generated TOC.
-
-### Incremental Mode
-
-The incremental mode (triggered by providing a `toc.yaml` path with `--update`) is designed for updating existing documentation after code changes. It first runs the incremental-sync phase to detect changes between the source files and existing documentation, then regenerates only the affected pages, validates the output, and updates the summary.
-
-Sources: [SKILL.md:27-36](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/SKILL.md#L27-L36), [gen.md:7-12](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/commands/gen.md#L7-L12)
-<!-- END:AUTOGEN deepwiki-skill_02_architecture_execution-modes -->
+Sources: [SKILL.md:18-83](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/SKILL.md#L18-L83), [workflow-runner.agent.md:40-55](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/agents/workflow-runner.agent.md#L40-L55)
+<!-- END:AUTOGEN deepwiki-skill_02_architecture_orchestration -->
 
 ---

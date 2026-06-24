@@ -1,196 +1,161 @@
-<!-- PAGE_ID: deepwiki-skill_06_cicd -->
+<!-- PAGE_ID: deepwiki-skill_06_cicd-installation -->
 <details>
-<summary>Relevant source files</summary>
+<summary>📚 Relevant source files</summary>
 
 The following files were used as context for generating this wiki page:
 
-- [README.md:1-290](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L1-L290)
+- [README.md:1-333](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L1-L333)
+- [apm.yml:1-23](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/apm.yml#L1-L23)
+- [requirements.txt:1-2](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/requirements.txt#L1-L2)
 
 </details>
 
-# CI/CD Integration
+# Installation and CI/CD Integration
 
-> **Related Pages**: [[Overview|01_overview.md]]
-
----
-
-<!-- BEGIN:AUTOGEN deepwiki-skill_06_cicd_overview -->
-## CI/CD Overview
-
-This section describes the benefits and approach for integrating deepwiki-skill into CI/CD pipelines to automate documentation generation and updates.
-
-### Benefits of CI/CD Integration
-
-One of the key advantages of deepwiki-skill is its built-in support for CI/CD integration. As stated in the project documentation, deepwiki-skill is "CI/CD Ready" with built-in incremental updates feature that makes it easy to deploy in CI/CD pipelines, keeping docs synchronized with code changes ([README.md:11](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L11)).
-
-Key benefits include:
-
-| Benefit | Description |
-|---------|-------------|
-| Automated Documentation | Documentation is automatically generated or updated as part of your CI/CD workflow |
-| Incremental Updates | Only affected sections are updated after code changes, reducing processing time ([README.md:11](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L11)) |
-| Code-Doc Synchronization | Ensures documentation stays in sync with the latest code changes |
-| Headless Execution | Supports running from CLI in headless mode for automation ([README.md:127-130](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L127-L130)) |
-
-### Headless Mode
-
-For CI/CD environments, deepwiki-skill can be run in headless mode (also called "yolo mode") using the Claude CLI:
-
-```bash
-claude -p "/deepwiki-skill:gen" --dangerously-skip-permissions
-```
-
-This allows the tool to run without interactive prompts, suitable for automated pipelines ([README.md:127-130](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L127-L130)).
-
-Sources: [README.md:11](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L11), [README.md:127-130](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L127-L130)
-<!-- END:AUTOGEN deepwiki-skill_06_cicd_overview -->
+> **Related Pages**: [[Overview|01_overview.md]], [[Workflow Phases and Execution Modes|03_workflow.md]]
 
 ---
 
-<!-- BEGIN:AUTOGEN deepwiki-skill_06_cicd_github-actions -->
-## GitHub Actions Integration
+<!-- BEGIN:AUTOGEN deepwiki-skill_06_cicd-installation_prerequisites -->
+## Prerequisites and Installation
 
-This section provides detailed guidance on integrating deepwiki-skill with GitHub Actions using Claude Code.
+This section covers the runtime dependencies deepwiki-skill needs and how to install the package into an AI coding agent using apm.
 
-### Authentication Setup
+### Prerequisites
 
-Before setting up the GitHub Actions workflow, you need to configure authentication. If you have a Pro/Max subscription, create an OAuth token first ([README.md:151](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L151)):
+deepwiki-skill relies on a Python runtime for its deterministic helper scripts and on the Mermaid CLI for validating generated diagrams ([README.md:41-46](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L41-L46)). The Mermaid CLI is installed globally via npm, so Node.js is also required ([README.md:43-46](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L43-L46)).
+
+| Requirement | Version / Detail | Purpose |
+|-------------|------------------|---------|
+| Python | `>=3.12` | Runs the phase helper scripts ([README.md:42](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L42)) |
+| Node.js + Mermaid CLI | `@mermaid-js/mermaid-cli` (global) | Validates generated Mermaid diagrams ([README.md:43-46](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L43-L46)) |
+| PyYAML | `>=6.0` | Parses `toc.yaml` inside the scripts ([requirements.txt:1-2](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/requirements.txt#L1-L2)) |
+
+The only declared Python package dependency is `PyYAML>=6.0`, which is listed in the scripts' `requirements.txt` ([requirements.txt:1-2](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/requirements.txt#L1-L2)). The Mermaid CLI is installed with:
 
 ```bash
-claude setup-token
+npm install -g @mermaid-js/mermaid-cli
 ```
 
-Record the token output in your terminal and save it to GitHub secrets for your repository, giving it a name like `CLAUDE_CODE_OAUTH_TOKEN` ([README.md:153-158](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L153-L158)).
+### Installation via apm
 
-If you prefer to use an API key instead, save the API key to GitHub secrets rather than an OAuth token ([README.md:151](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L151)).
+deepwiki-skill is distributed as an apm package. Its manifest declares the package `name`, `version`, and a `type: hybrid`, meaning it bundles a skill together with the `workflow-runner` agent and the `gen-wiki` prompt ([apm.yml:1-10](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/apm.yml#L1-L10)). The manifest also sets `targets: all`, so the primitives compile for every supported harness ([apm.yml:12-15](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/apm.yml#L12-L15)).
 
-### Workflow Architecture
+apm is the recommended installation path: it installs the `wiki` skill, the `workflow-runner` agent, and the `gen-wiki` prompt into any supported harness (Claude Code, Copilot, Cursor, Codex, Gemini, and more) from a single manifest, so the same command works everywhere ([README.md:52-54](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L52-L54)).
 
-The following diagram illustrates the GitHub Actions workflow for wiki documentation updates:
+After [installing the apm CLI](https://microsoft.github.io/apm/quickstart/), install the package from your project root ([README.md:56-60](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L56-L60)):
+
+```bash
+apm install natsu1211/deepwiki-skill
+```
+
+It can also be installed globally with the `-g` flag ([README.md:62-66](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L62-L66)):
+
+```bash
+apm install -g natsu1211/deepwiki-skill
+```
+
+apm compiles the primitives into the right place for each harness — for example `.claude/skills/wiki/` for Claude Code, or `.agents/skills/wiki/` for the converged layout ([README.md:68](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L68)). While deepwiki-skill works with any agent that supports skills, Claude Code is recommended because it currently offers the best subagent support for optimal documentation generation ([README.md:50](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L50)).
+
+Sources: [README.md:41-68](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L41-L68), [apm.yml:1-15](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/apm.yml#L1-L15), [requirements.txt:1-2](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/requirements.txt#L1-L2)
+<!-- END:AUTOGEN deepwiki-skill_06_cicd-installation_prerequisites -->
+
+---
+
+<!-- BEGIN:AUTOGEN deepwiki-skill_06_cicd-installation_usage -->
+## Command Usage
+
+This section describes the two ways to invoke deepwiki-skill: natural-language requests and the dedicated `gen-wiki` command with its CLI-style arguments.
+
+### Invoking the Skill
+
+The skill can be triggered with a plain natural-language instruction, such as `Use wiki skill to generate wiki documentation` or `Invoke wiki skill to update documents at docs/wiki based on docs/wiki/toc.yaml` ([README.md:72](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L72)).
+
+A custom `gen-wiki` command is also provided to parse arguments and explicitly invoke the skill, letting you use it like a regular CLI tool for more concise input and more precise intent ([README.md:74](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L74)).
+
+### Basic Usage Examples
+
+The README documents several common invocation patterns ([README.md:76-126](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L76-L126)):
+
+| Goal | Command |
+|------|---------|
+| Fully automatic generation | `/gen-wiki` ([README.md:78-81](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L78-L81)) |
+| Generate TOC file only | `/gen-wiki --structure` ([README.md:83-86](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L83-L86)) |
+| Generate from existing TOC | `/gen-wiki docs/wiki/toc.yaml` ([README.md:88-91](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L88-L91)) |
+| Incremental update | `/gen-wiki docs/wiki/toc.yaml --update` ([README.md:93-96](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L93-L96)) |
+| Specify output directory | `/gen-wiki --output ./documentation/wiki` ([README.md:98-101](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L98-L101)) |
+| Output in Chinese | `/gen-wiki --language zh-CN` ([README.md:103-106](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L103-L106)) |
+| Headless / yolo run from CLI | `claude -p "/gen-wiki" --dangerously-skip-permissions` ([README.md:123-126](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L123-L126)) |
+
+Multiple arguments can be combined in a single invocation, for example `/gen-wiki --language zh-CN --output ./docs --exclude "**/*.test.js"` ([README.md:118-121](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L118-L121)).
+
+### Available Arguments
+
+The full set of CLI-style arguments accepted by `gen-wiki` is documented in the README ([README.md:141-151](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L141-L151)):
+
+| Argument | Description |
+|----------|-------------|
+| `<toc.yaml>` | Path to an existing TOC file ([README.md:145](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L145)) |
+| `--structure` | Generate only the TOC structure, stopping before docs ([README.md:146](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L146)) |
+| `--update` | Incremental update mode, requires a TOC file path ([README.md:147](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L147)) |
+| `--output <dir>` | Output directory, default `./docs/wiki/` ([README.md:148](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L148)) |
+| `--language <locale>` | Output language, default `en-US` ([README.md:149](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L149)) |
+| `--include <pattern>` | Include files matching a pattern, repeatable ([README.md:150](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L150)) |
+| `--exclude <pattern>` | Exclude files matching a pattern, repeatable ([README.md:151](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L151)) |
+
+These arguments map directly onto the typical use cases: rapidly understanding a new project with `/gen-wiki`, controlling chapter structure by first running `--structure` and editing `toc.yaml`, then regenerating, and syncing docs after changes with `--update` ([README.md:128-139](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L128-L139)).
+
+Sources: [README.md:70-151](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L70-L151)
+<!-- END:AUTOGEN deepwiki-skill_06_cicd-installation_usage -->
+
+---
+
+<!-- BEGIN:AUTOGEN deepwiki-skill_06_cicd-installation_pipelines -->
+## CI/CD Pipeline Integration
+
+This section describes how deepwiki-skill runs inside a CI/CD pipeline to keep documentation synchronized with code, using the documented GitHub Actions workflow as the reference implementation.
+
+### Claude Code Authentication
+
+For CI use with a Pro/Max subscription, an OAuth token is created first; alternatively an API key can be used and stored instead ([README.md:158](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L158)). The token is produced by running `claude setup-token` and is then saved to GitHub secrets under a name such as `CLAUDE_CODE_OAUTH_TOKEN` ([README.md:160-165](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L160-L165)).
+
+### GitHub Actions Workflow
+
+The README provides a `workflow_dispatch` (manually triggered) GitHub Actions workflow that incrementally updates existing documentation ([README.md:168-173](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L168-L173)). The job requests `contents: write`, `pull-requests: write`, `issues: write`, and `id-token: write` permissions ([README.md:178-182](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L178-L182)).
+
+The workflow's steps mirror the prerequisites and installation flow described earlier:
+
+| Step | Action | Reference |
+|------|--------|-----------|
+| Checkout | `actions/checkout@v4` with `fetch-depth: 1` ([README.md:184-187](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L184-L187)) | Pulls the repository |
+| Node.js setup | `actions/setup-node@v4`, Node 20 ([README.md:189-192](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L189-L192)) | Provides Node for Mermaid CLI |
+| Install mermaid-cli | `npm install -g @mermaid-js/mermaid-cli` ([README.md:194-195](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L194-L195)) | Enables diagram validation |
+| Python setup | `actions/setup-python@v5`, Python 3.12 ([README.md:197-200](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L197-L200)) | Provides the script runtime |
+| Install apm + skill | `curl ... apm-unix \| sh` then `apm install natsu1211/deepwiki-skill --target claude` ([README.md:202-205](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L202-L205)) | Installs the package for Claude |
+| Install Python deps | `pip install -r .claude/skills/wiki/scripts/requirements.txt` if present ([README.md:207-211](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L207-L211)) | Installs PyYAML |
+| Run update | `anthropics/claude-code-action@v1` with prompt `/gen-wiki docs/wiki/toc.yaml --update` ([README.md:213-220](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L213-L220)) | Performs the incremental doc update |
+
+Note that `apm install` is invoked with `--target claude`, which compiles the skill into `.claude/skills/wiki/` — the same path the Python dependency step references ([README.md:205](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L205), [README.md:209-211](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L209-L211)). The run step passes the saved OAuth token via `claude_code_oauth_token` and invokes the `--update` incremental mode ([README.md:217-218](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L217-L218)).
+
+The following diagram summarizes the pipeline's job sequence:
 
 ```mermaid
 graph TD
-    A["Manual Trigger"] --> B["Checkout Repository"]
-    B --> C["Setup Node.js"]
+    A["workflow_dispatch trigger"] --> B["Checkout repository"]
+    B --> C["Setup Node.js 20"]
     C --> D["Install mermaid-cli"]
-    D --> E["Setup Python"]
-    E --> F["Install Python Dependencies"]
-    F --> G["Run Wiki Doc Update"]
-    G --> H["Claude Code Action"]
-    H --> I["deepwiki-skill Execution"]
-    I --> J["Updated Documentation"]
+    D --> E["Setup Python 3.12"]
+    E --> F["Install apm and deepwiki-skill (--target claude)"]
+    F --> G["pip install requirements.txt"]
+    G --> H["claude-code-action: /gen-wiki toc.yaml --update"]
+    H --> I["Updated wiki docs"]
 ```
 
-### Example Workflow Configuration
+### Codex Alternative
 
-The following is a complete GitHub Actions workflow example that can be triggered manually to incrementally update existing documentation ([README.md:161-212](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L161-L212)):
+For the Codex harness, the README does not embed a full workflow and instead refers users to the external `openai/codex-action` project ([README.md:224-225](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L224-L225)).
 
-```yaml
-name: Wiki Doc Update
-
-on:
-  workflow_dispatch:
-
-jobs:
-  generate:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      issues: write
-      id-token: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install mermaid-cli
-        run: npm install -g @mermaid-js/mermaid-cli
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Install Python dependencies
-        run: |
-          if [ -f skills/wiki/scripts/requirements.txt ]; then
-            pip install -r skills/wiki/scripts/requirements.txt
-          fi
-
-      - name: Run Wiki Doc Update
-        id: deepwiki-skill
-        uses: anthropics/claude-code-action@v1
-        with:
-          plugin_marketplaces: 'https://github.com/natsu1211/deepwiki-skill.git'
-          plugins: 'deepwiki-skill@deepwiki-skill-marketplace'
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          prompt: '/deepwiki-skill:gen docs/wiki/toc.yaml --update'
-          additional_permissions: |
-            actions: read
-```
-
-### Key Workflow Components
-
-| Component | Purpose |
-|-----------|---------|
-| `workflow_dispatch` | Enables manual triggering of the workflow ([README.md:165-166](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L165-L166)) |
-| `permissions` | Grants necessary permissions for writing content and pull requests ([README.md:171-175](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L171-L175)) |
-| Node.js setup | Required for mermaid-cli diagram validation ([README.md:182-188](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L182-L188)) |
-| Python setup | Required for deepwiki-skill scripts (Python 3.12) ([README.md:190-193](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L190-L193)) |
-| `claude-code-action@v1` | The official Anthropic GitHub Action for running Claude Code ([README.md:203](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L203)) |
-| `--update` flag | Triggers incremental update mode for efficient documentation updates ([README.md:208](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L208)) |
-
-### Prerequisites in CI Environment
-
-The workflow ensures all prerequisites are installed:
-
-1. **Node.js 20** - Required for mermaid-cli
-2. **mermaid-cli** - For diagram validation (`npm install -g @mermaid-js/mermaid-cli`) ([README.md:187-188](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L187-L188))
-3. **Python 3.12** - For deepwiki-skill scripts ([README.md:192-193](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L192-L193))
-4. **Python dependencies** - Installed from `skills/wiki/scripts/requirements.txt` if present ([README.md:195-199](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L195-L199))
-
-Sources: [README.md:147-212](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L147-L212)
-<!-- END:AUTOGEN deepwiki-skill_06_cicd_github-actions -->
-
----
-
-<!-- BEGIN:AUTOGEN deepwiki-skill_06_cicd_other-platforms -->
-## Other Platforms
-
-While Claude Code provides the best subagent support for deepwiki-skill, the skill can also be integrated with other AI coding assistants in CI/CD pipelines.
-
-### Gemini CLI Integration
-
-For integrating deepwiki-skill with Gemini CLI in CI/CD, refer to the official Gemini CLI GitHub Action:
-
-- **GitHub Action**: https://github.com/google-github-actions/run-gemini-cli ([README.md:214-215](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L214-L215))
-
-Note that Gemini CLI version 0.24.0 or higher is required to use agent skills. Manual installation will not include subagents, and generation quality may degrade due to the limited context window ([README.md:47](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L47)).
-
-### Codex Integration
-
-For integrating deepwiki-skill with Codex in CI/CD, refer to the official Codex GitHub Action:
-
-- **GitHub Action**: https://github.com/openai/codex-action ([README.md:217-218](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L217-L218))
-
-Note that generation quality may degrade with Codex due to the limited context window ([README.md:65](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L65)).
-
-### Platform Comparison
-
-| Platform | CI/CD Action | Notes |
-|----------|--------------|-------|
-| Claude Code | `anthropics/claude-code-action@v1` | Best subagent support, recommended for optimal results ([README.md:33](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L33)) |
-| Gemini CLI | `google-github-actions/run-gemini-cli` | Requires v0.24.0+, limited context window ([README.md:47](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L47)) |
-| Codex | `openai/codex-action` | Limited context window may affect quality ([README.md:65](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L65)) |
-
-Sources: [README.md:33](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L33), [README.md:47](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L47), [README.md:65](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L65), [README.md:214-218](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/README.md#L214-L218)
-<!-- END:AUTOGEN deepwiki-skill_06_cicd_other-platforms -->
+Sources: [README.md:154-225](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/README.md#L154-L225)
+<!-- END:AUTOGEN deepwiki-skill_06_cicd-installation_pipelines -->
 
 ---

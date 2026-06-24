@@ -1,300 +1,153 @@
 <!-- PAGE_ID: deepwiki-skill_04_scripts -->
 <details>
-<summary>Relevant source files</summary>
+<summary>📚 Relevant source files</summary>
 
 The following files were used as context for generating this wiki page:
 
-- [collect_context.py:1-769](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_context.py#L1-L769)
-- [collect_sync_context.py:1-326](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_sync_context.py#L1-L326)
-- [collect_update_context.py:1-595](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_update_context.py#L1-L595)
-- [collect_git_diff.py:1-370](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_git_diff.py#L1-L370)
-- [read_files.py:1-391](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/read_files.py#L1-L391)
-- [validate_docs_structure.py:1-597](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_docs_structure.py#L1-L597)
-- [validate_mermaid.py:1-826](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_mermaid.py#L1-L826)
-- [generate_summary.py:1-502](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/generate_summary.py#L1-L502)
+- [collect_context.py:1-768](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_context.py#L1-L768)
+- [collect_sync_context.py:1-325](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_sync_context.py#L1-L325)
+- [collect_update_context.py:1-594](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_update_context.py#L1-L594)
+- [read_files.py:1-390](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/read_files.py#L1-L390)
+- [collect_git_diff.py:1-369](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_git_diff.py#L1-L369)
+- [get_section_update_diff.py:1-262](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/get_section_update_diff.py#L1-L262)
+- [validate_docs_structure.py:1-596](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_docs_structure.py#L1-L596)
+- [validate_mermaid.py:1-825](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_mermaid.py#L1-L825)
+- [generate_summary.py:1-501](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/generate_summary.py#L1-L501)
+- [requirements.txt:1-2](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/requirements.txt#L1-L2)
 
 </details>
 
-# Python Scripts
+# Python Helper Scripts
 
-> **Related Pages**: [[Workflow Phases|03_workflow.md]], [[Reference Policies|05_policies.md]]
+> **Related Pages**: [[Workflow Phases and Execution Modes|03_workflow.md]], [[Policies, Schema, and Templates|05_policies.md]]
 
----
-
-<!-- BEGIN:AUTOGEN deepwiki-skill_04_scripts_overview -->
-## Scripts Overview
-
-This section provides an overview of the Python utility scripts that power the deepwiki-skill workflow. These scripts handle repository scanning, file reading, documentation validation, and summary generation.
-
-The scripts are located in `skills/wiki/scripts/` and can be categorized into three main groups:
-
-| Category | Scripts | Purpose |
-|----------|---------|---------|
-| Context Collection | `collect_context.py`, `collect_sync_context.py`, `collect_update_context.py`, `collect_git_diff.py` | Gather repository structure, TOC synchronization status, and git change information ([collect_context.py:2-6](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_context.py#L2-L6)) |
-| File Reading | `read_files.py` | Read source files with line numbers for accurate citation ([read_files.py:2-6](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/read_files.py#L2-L6)) |
-| Validation | `validate_docs_structure.py`, `validate_mermaid.py` | Validate documentation structure against TOC and Mermaid diagram syntax ([validate_docs_structure.py:2-10](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_docs_structure.py#L2-L10)) |
-| Summary Generation | `generate_summary.py` | Generate SUMMARY.md report with generation statistics ([generate_summary.py:2-9](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/generate_summary.py#L2-L9)) |
-
-All scripts follow a consistent CLI pattern with `argparse` for argument handling and JSON output for structured data exchange between workflow phases.
-
-Sources: [collect_context.py:2-17](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_context.py#L2-L17), [read_files.py:2-20](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/read_files.py#L2-L20), [validate_docs_structure.py:2-28](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_docs_structure.py#L2-L28), [generate_summary.py:2-25](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/generate_summary.py#L2-L25)
-<!-- END:AUTOGEN deepwiki-skill_04_scripts_overview -->
+The `scripts/` directory contains the deterministic Python utilities that back each documentation phase. The agent delegates all repository I/O — directory scanning, line-numbered file reads, git diffing, structure/diagram validation, and summary reporting — to these scripts so that citations and change detection are reproducible rather than inferred. Each script is a standalone CLI that accepts arguments, prints JSON (or writes Markdown), and exits non-zero on failure. The only third-party dependency is PyYAML ([requirements.txt:1-2](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/requirements.txt#L1-L2)).
 
 ---
 
 <!-- BEGIN:AUTOGEN deepwiki-skill_04_scripts_context-collection -->
 ## Context Collection Scripts
 
-This section covers the scripts that collect various types of context information for wiki generation.
+These scripts gather the raw material the agent reasons over: the project structure and README (`collect_context.py`), the sync state between a TOC and existing docs (`collect_sync_context.py`), the git-driven update plan (`collect_update_context.py`), and line-numbered file contents for citations (`read_files.py`).
 
 ### collect_context.py
 
-The primary context collection script scans a repository and collects project structure and README content for initial wiki generation ([collect_context.py:2-6](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_context.py#L2-L6)).
+`collect_context.py` scans a repository and produces a JSON context pack containing the directory tree, file/language statistics, and README content. The top-level entry point is `collect_context`, which validates inputs (rejecting empty paths and `max_depth` outside the 1–20 range), resolves the git root, and assembles a result dictionary with `structure`, `readme`, and `metadata` keys ([collect_context.py:584-614](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_context.py#L584-L614)).
 
-**Usage:**
+The script applies a token-aware byte budget so the context pack stays within an LLM context window. `DEFAULT_MAX_BYTES` defaults to 600000 bytes (overridable via the `DOC_GEN_DEFAULT_MAX_BYTES` environment variable), split roughly 80% to structure and 20% to the README ([collect_context.py:30-36](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_context.py#L30-L36)). To honor the structure budget it performs adaptive depth reduction: it scans at the requested depth and, if the serialized structure exceeds the budget, decrements the depth down to a floor of 3, marking `structure_truncated` when it had to shrink ([collect_context.py:616-655](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_context.py#L616-L655)).
 
-```bash
-python collect_context.py --repo-path /path/to/repo [options]
+File handling is defensive. `detect_encoding` tries a sequence of encodings (`utf-8`, `utf-16`, several Latin and Chinese codecs) before giving up ([collect_context.py:179-193](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_context.py#L179-L193)), `is_binary_file` inspects a byte sample for null bytes and decode failures to filter binaries ([collect_context.py:196-230](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_context.py#L196-L230)), and `detect_language` maps extensions (and special names like `Dockerfile`/`Makefile`) to language labels using `EXTENSION_LANGUAGE_MAP` ([collect_context.py:233-244](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_context.py#L233-L244)). A large `DEFAULT_EXCLUDE_PATTERNS` list filters out noise such as `.git`, `node_modules`, and `__pycache__` during the walk ([collect_context.py:38-63](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_context.py#L38-L63)).
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `--repo-path` | required | Repository path to scan ([collect_context.py:713-717](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_context.py#L713-L717)) |
+| `--max-depth` | `10` | Maximum scan depth ([collect_context.py:718-723](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_context.py#L718-L723)) |
+| `--include` | none | Include patterns, repeatable ([collect_context.py:724-729](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_context.py#L724-L729)) |
+| `--exclude` | none | Exclude patterns, repeatable ([collect_context.py:730-735](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_context.py#L730-L735)) |
+| `--output` | stdout | Output file path ([collect_context.py:736-739](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_context.py#L736-L739)) |
+
+### read_files.py
+
+`read_files.py` is the citation backbone: it reads the source files referenced by a TOC and returns their contents annotated with line numbers, so the agent can cite exact ranges. The `read_files` function resolves each path against the git root, reads it, and aggregates per-file results plus `files_read`/`files_failed` counters ([read_files.py:251-309](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/read_files.py#L251-L309)).
+
+When line numbers are requested, each line is prefixed using a fixed-width number and a `→` delimiter, producing the `{spaces}{line_num}→{content}` format consumed elsewhere in the pipeline ([read_files.py:238-243](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/read_files.py#L238-L243)). Before reading, the script enforces a `max_size` cap (default 1 MB) and skips binary files, recording an `error` string instead of raising ([read_files.py:204-222](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/read_files.py#L204-L222)).
+
+The `--files` argument accepts a JSON array that may contain glob patterns. `expand_glob_patterns` detects pattern characters via `is_glob_pattern` and expands them with `glob.glob(..., recursive=True)` relative to the repo, returning a sorted, de-duplicated list of concrete file paths ([read_files.py:30-68](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/read_files.py#L30-L68)). The CLI parses the JSON, expands globs, and warns when nothing matches ([read_files.py:351-360](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/read_files.py#L351-L360)).
+
+```python
+if include_line_numbers:
+    numbered_lines = [f"{i+1:6}→{line}" for i, line in enumerate(lines)]
+    result["content"] = "\n".join(numbered_lines)
 ```
-
-**Key Parameters:**
-
-| Parameter | Required | Default | Description |
-|-----------|----------|---------|-------------|
-| `--repo-path` | Yes | - | Repository path ([collect_context.py:12](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_context.py#L12)) |
-| `--max-depth` | No | 10 | Maximum scan depth ([collect_context.py:13](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_context.py#L13)) |
-| `--include` | No | - | Include patterns (repeatable) ([collect_context.py:14](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_context.py#L14)) |
-| `--exclude` | No | - | Exclude patterns (repeatable) ([collect_context.py:15](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_context.py#L15)) |
-| `--output` | No | stdout | Output file path ([collect_context.py:16](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_context.py#L16)) |
-
-The script implements budget allocation to manage output size, reserving 80% for structure and 20% for README content ([collect_context.py:34-36](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_context.py#L34-L36)). It supports automatic depth reduction when output exceeds the budget limit ([collect_context.py:617-651](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_context.py#L617-L651)).
-
-The script detects programming languages from file extensions using a comprehensive mapping table ([collect_context.py:66-127](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_context.py#L66-L127)).
+The numbering loop that every citation depends on ([read_files.py:237-241](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/read_files.py#L237-L241)).
 
 ### collect_sync_context.py
 
-Compares TOC structure with existing documentation to determine what needs to be synchronized during incremental updates ([collect_sync_context.py:2-6](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_sync_context.py#L2-L6)).
+`collect_sync_context.py` compares a TOC against the Markdown files already on disk to decide what must be (re)generated when the TOC structure changes. `collect_sync_context` loads the TOC, flattens its pages/sections, scans existing docs, and partitions pages into new, to-update, and unchanged sets ([collect_sync_context.py:166-268](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_sync_context.py#L166-L268)).
 
-**Usage:**
+It reads the page and section state directly from the Markdown markers: `extract_page_id` and `extract_autogen_sections` parse the `PAGE_ID` and `BEGIN:AUTOGEN` comments ([collect_sync_context.py:28-38](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_sync_context.py#L28-L38)), while `is_section_content_empty` checks whether an AUTOGEN block contains only whitespace or `---` separators, so empty stubs are treated as needing generation ([collect_sync_context.py:41-65](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_sync_context.py#L41-L65)). `collect_toc_pages` walks nested sections recursively, merging inherited page-level `source_files` into each section ([collect_sync_context.py:78-125](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_sync_context.py#L78-L125)).
 
-```bash
-python collect_sync_context.py --repo-path /path/to/repo --toc-file toc.yaml --doc-dir ./docs/wiki/
-```
-
-**Key Functions:**
-
-The script extracts PAGE_ID markers from existing documentation using regex pattern matching ([collect_sync_context.py:28-32](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_sync_context.py#L28-L32)) and identifies empty sections by checking the content between AUTOGEN markers ([collect_sync_context.py:41-65](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_sync_context.py#L41-L65)).
-
-The output includes lists of new pages, pages to update, and unchanged pages along with metadata about the synchronization state ([collect_sync_context.py:251-268](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_sync_context.py#L251-L268)).
+For each page present in both the TOC and on disk, it computes section-level deltas: sections that are missing or empty become `new_sections`, and sections present on disk but absent from the TOC become `deleted_sections` ([collect_sync_context.py:213-244](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_sync_context.py#L213-L244)). All three CLI arguments — `--repo-path`, `--toc-file`, and `--doc-dir` — are required ([collect_sync_context.py:275-289](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_sync_context.py#L275-L289)).
 
 ### collect_update_context.py
 
-Analyzes git changes between commits to determine which documentation sections need regeneration for incremental updates ([collect_update_context.py:2-6](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_update_context.py#L2-L6)).
+`collect_update_context.py` is the code-change counterpart to the sync script: it analyzes git changes between the TOC's recorded commit and a target commit to decide which sections need regeneration. `collect_update_context` reads `ref_commit_hash` from the TOC's `project` block as the base commit; if it is absent, the script returns an `update_mode` of `"full"` to signal that a complete regeneration is required ([collect_update_context.py:320-352](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_update_context.py#L320-L352)).
 
-**Key Parameters:**
+In incremental mode it computes a merge base between the base and target commits and lists changed files via `git diff --name-status`, categorizing them into added, modified, deleted, and renamed sets ([collect_update_context.py:354-367](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_update_context.py#L354-L367)). It then maps each changed file back to the sections whose `source_patterns` match it — using `collect_section_sources` to flatten the TOC and `match_file_to_patterns` for folder, glob, and filename matching — and attaches the affected section's `current_content` extracted from the existing doc ([collect_update_context.py:407-449](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_update_context.py#L407-L449)). Added files not covered by any pattern are surfaced as `new_source_files` needing a TOC update, and deleted files list the sections they affect ([collect_update_context.py:451-480](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_update_context.py#L451-L480)).
 
-| Parameter | Required | Default | Description |
-|-----------|----------|---------|-------------|
-| `--repo-path` | Yes | - | Repository path |
-| `--toc-file` | Yes | - | TOC YAML file path |
-| `--doc-dir` | Yes | - | Documentation directory |
-| `--target-commit` | No | HEAD | Target commit reference ([collect_update_context.py:16](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_update_context.py#L16)) |
-| `--include-diff` | No | false | Include line-numbered patch data ([collect_update_context.py:17](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_update_context.py#L17)) |
+When `--include-diff` is set, the script enriches each changed file with a line-numbered patch produced by `convert_to_hunks_with_line_numbers`, which rewrites unified-diff hunks so that added (`+`), removed (`-`), and context lines carry their actual line numbers ([collect_update_context.py:103-155](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_update_context.py#L103-L155)).
 
-The script converts patch data to a format with line numbers for easier reference ([collect_update_context.py:103-156](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_update_context.py#L103-L156)).
-
-### collect_git_diff.py
-
-Collects git diff data between commits with optional line numbers and context for change analysis ([collect_git_diff.py:2-6](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_git_diff.py#L2-L6)).
-
-**Key Parameters:**
-
-| Parameter | Required | Default | Description |
-|-----------|----------|---------|-------------|
-| `--repo-path` | Yes | - | Repository path |
-| `--base-ref` | No | origin/main | Base reference ([collect_git_diff.py:14](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_git_diff.py#L14)) |
-| `--head-ref` | No | HEAD | Head reference ([collect_git_diff.py:15](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_git_diff.py#L15)) |
-| `--include-uncommitted` | No | false | Include staged/unstaged changes ([collect_git_diff.py:16](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_git_diff.py#L16)) |
-| `--context` | No | 3 | Context lines for diff ([collect_git_diff.py:17](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_git_diff.py#L17)) |
-
-Sources: [collect_context.py:2-17](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_context.py#L2-L17), [collect_sync_context.py:2-16](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_sync_context.py#L2-L16), [collect_update_context.py:2-20](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_update_context.py#L2-L20), [collect_git_diff.py:2-19](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/collect_git_diff.py#L2-L19)
+Sources: [collect_context.py:584-768](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_context.py#L584-L768), [read_files.py:30-309](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/read_files.py#L30-L309), [collect_sync_context.py:166-268](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_sync_context.py#L166-L268), [collect_update_context.py:284-506](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_update_context.py#L284-L506)
 <!-- END:AUTOGEN deepwiki-skill_04_scripts_context-collection -->
 
 ---
 
-<!-- BEGIN:AUTOGEN deepwiki-skill_04_scripts_file-reading -->
-## File Reading
+<!-- BEGIN:AUTOGEN deepwiki-skill_04_scripts_diff -->
+## Git Diff Scripts
 
-The `read_files.py` script reads source files and adds line numbers for accurate citations in wiki documentation ([read_files.py:2-6](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/read_files.py#L2-L6)).
+Two scripts produce line-numbered diffs across commits. `collect_git_diff.py` collects all changed files in a range for broad change analysis, while `get_section_update_diff.py` targets a specific list of files for section-level updates. Both share the same git-interaction helpers and the same line-numbering algorithm.
 
-**Usage:**
+### Shared git helpers
 
-```bash
-python read_files.py --repo-path /path/to/repo --files '["file1.py", "src/**/*.cs"]'
-```
+Both scripts wrap git through `run_git_command`, which runs `git` as a subprocess in the repo directory and raises `RuntimeError` on a non-zero return code ([collect_git_diff.py:30-40](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_git_diff.py#L30-L40)). They reuse `resolve_commit` (`git rev-parse`), `get_file_patch` (a `git diff --patch --unified=N` for one file), and `convert_to_hunks_with_line_numbers` for formatting ([get_section_update_diff.py:20-61](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/get_section_update_diff.py#L20-L61)). The line-numbering helper skips diff metadata lines (`diff --git`, `index`, `---`, `+++`) and emits deletion markers for files with a `D` status ([get_section_update_diff.py:73-125](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/get_section_update_diff.py#L73-L125)).
 
-**Key Parameters:**
+### collect_git_diff.py
 
-| Parameter | Required | Default | Description |
-|-----------|----------|---------|-------------|
-| `--repo-path` | Yes | - | Repository path ([read_files.py:319](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/read_files.py#L319)) |
-| `--files` | Yes | - | JSON array of file paths or glob patterns ([read_files.py:323](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/read_files.py#L323)) |
-| `--line-numbers` | No | true | Add line numbers ([read_files.py:327-329](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/read_files.py#L327-L329)) |
-| `--max-size` | No | 1MB | Maximum file size in bytes ([read_files.py:339-342](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/read_files.py#L339-L342)) |
+`collect_git_diff` resolves the head and base refs, computes their merge base, and walks every changed file, building a per-file record with a formatted patch and the original/new byte sizes ([collect_git_diff.py:175-292](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_git_diff.py#L175-L292)). The base reference defaults to `origin/main` and the head to `HEAD` ([collect_git_diff.py:175-201](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_git_diff.py#L175-L201)). With `--include-uncommitted`, it appends staged and unstaged diffs (via `get_staged_diff` and `get_unstaged_diff`) onto the committed patch so work-in-progress changes are visible ([collect_git_diff.py:226-233](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_git_diff.py#L226-L233)). Errors for individual files are captured into the per-file record rather than aborting the whole run ([collect_git_diff.py:265-274](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_git_diff.py#L265-L274)).
 
-**Glob Pattern Support:**
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `--base-ref` | `origin/main` | Base reference for the diff ([collect_git_diff.py:304-308](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_git_diff.py#L304-L308)) |
+| `--head-ref` | `HEAD` | Head reference ([collect_git_diff.py:309-313](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_git_diff.py#L309-L313)) |
+| `--include-uncommitted` | off | Include staged/unstaged changes ([collect_git_diff.py:314-318](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_git_diff.py#L314-L318)) |
+| `--context` | `3` | Context lines per hunk ([collect_git_diff.py:319-324](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_git_diff.py#L319-L324)) |
+| `--no-line-numbers` | off | Disable line numbering ([collect_git_diff.py:325-330](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_git_diff.py#L325-L330)) |
 
-The script supports glob patterns for flexible file selection ([read_files.py:30-68](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/read_files.py#L30-L68)):
+### get_section_update_diff.py
 
-| Pattern | Description |
-|---------|-------------|
-| `*` | Matches any characters except `/` |
-| `**` | Matches any characters including `/` (recursive) |
-| `?` | Matches a single character |
+`get_section_update_diff` takes explicit `--base-commit` and `--target-commit` hashes plus a JSON `--file-paths` array, and returns diffs only for those files ([get_section_update_diff.py:128-184](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/get_section_update_diff.py#L128-L184)). For each file it queries the status with `get_file_status`, skips files with no status, and skips files whose patch is empty unless they were deleted ([get_section_update_diff.py:146-157](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/get_section_update_diff.py#L146-L157)). Unlike `collect_git_diff.py`, its context window defaults to `0` lines, producing tight, change-only patches suited to updating a single section ([get_section_update_diff.py:211-216](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/get_section_update_diff.py#L211-L216)).
 
-**Line Number Format:**
-
-Lines appear with the format `{spaces}{line_num}{arrow}{content}` where `{arrow}` is the delimiter, making it easy to extract exact line numbers for citations ([read_files.py:238-241](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/read_files.py#L238-L241)).
-
-**Language Detection:**
-
-The script automatically detects programming languages from file extensions using a comprehensive mapping table ([read_files.py:72-87](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/read_files.py#L72-L87)).
-
-**Binary File Detection:**
-
-Files are checked for binary content by examining null bytes and attempting UTF-8 decoding ([read_files.py:120-151](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/read_files.py#L120-L151)).
-
-Sources: [read_files.py:2-20](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/read_files.py#L2-L20), [read_files.py:179-248](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/read_files.py#L179-L248)
-<!-- END:AUTOGEN deepwiki-skill_04_scripts_file-reading -->
+Sources: [collect_git_diff.py:30-292](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/collect_git_diff.py#L30-L292), [get_section_update_diff.py:73-184](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/get_section_update_diff.py#L73-L184)
+<!-- END:AUTOGEN deepwiki-skill_04_scripts_diff -->
 
 ---
 
-<!-- BEGIN:AUTOGEN deepwiki-skill_04_scripts_validation -->
-## Validation Scripts
+<!-- BEGIN:AUTOGEN deepwiki-skill_04_scripts_validation-summary -->
+## Validation and Summary Scripts
 
-This section covers the two validation scripts used to ensure documentation quality.
+The final three scripts form the quality gate and reporting layer: `validate_docs_structure.py` checks each page against the TOC, `validate_mermaid.py` validates diagram syntax, and `generate_summary.py` aggregates everything into a `SUMMARY.md` report.
 
 ### validate_docs_structure.py
 
-Validates wiki documentation structure against the TOC specification ([validate_docs_structure.py:2-10](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_docs_structure.py#L2-L10)).
+`validate_docs` loads the TOC, then for every page validates the matching Markdown file and accumulates issues and statistics into a `ValidationResult` ([validate_docs_structure.py:433-524](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_docs_structure.py#L433-L524)). Each issue is an `Issue` dataclass carrying a file, optional line, severity (`error`/`warning`), category, message, and a `fix_hint` ([validate_docs_structure.py:45-63](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_docs_structure.py#L45-L63)).
 
-**Usage:**
+The core checks are:
 
-```bash
-python validate_docs_structure.py --doc-dir docs/wiki --toc-file docs/wiki/toc.yaml
-```
+| Check | Behavior |
+|-------|----------|
+| PAGE_ID | Flags a missing or mismatched `PAGE_ID` marker against the TOC's page id ([validate_docs_structure.py:373-394](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_docs_structure.py#L373-L394)) |
+| AUTOGEN pairing | Uses a stack to detect nested, orphaned, unclosed, and mismatched `BEGIN`/`END` markers ([validate_docs_structure.py:155-222](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_docs_structure.py#L155-L222)) |
+| Section coverage | Reports TOC sections with no AUTOGEN block as errors, and extra on-disk sections as warnings ([validate_docs_structure.py:224-246](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_docs_structure.py#L224-L246)) |
+| Internal links | Warns on links to files not in the TOC and errors on links whose target file is missing on disk ([validate_docs_structure.py:251-296](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_docs_structure.py#L251-L296)) |
+| Structure | Requires exactly one H1 heading and warns on very small files ([validate_docs_structure.py:299-342](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_docs_structure.py#L299-L342)) |
 
-**Validation Checks:**
-
-| Check | Description |
-|-------|-------------|
-| PAGE_ID markers | Presence and correctness of page identifiers ([validate_docs_structure.py:106-118](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_docs_structure.py#L106-L118)) |
-| AUTOGEN markers | BEGIN/END pairs with no overlaps ([validate_docs_structure.py:155-248](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/scripts/validate_docs_structure.py#L155-L248)) |
-| TOC alignment | All pages/sections defined in TOC exist ([validate_docs_structure.py:433-524](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_docs_structure.py#L433-L524)) |
-| Internal links | Valid markdown link targets ([validate_docs_structure.py:251-296](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_docs_structure.py#L251-L296)) |
-| Basic structure | H1 headings, file size checks ([validate_docs_structure.py:299-342](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_docs_structure.py#L299-L342)) |
-
-The script uses an `Issue` dataclass to represent validation problems with file, line, severity, category, message, and fix hint fields ([validate_docs_structure.py:46-63](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_docs_structure.py#L46-L63)).
+Expected sections are collected recursively, so nested subsections are validated too ([validate_docs_structure.py:396-411](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_docs_structure.py#L396-L411)). The serialized result marks `is_valid` as true only when there are zero errors, and `main` exits non-zero in that case so the phase can fail a pipeline ([validate_docs_structure.py:75-90](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_docs_structure.py#L75-L90)). A `--fix` flag is accepted but explicitly not yet implemented ([validate_docs_structure.py:558-559](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_docs_structure.py#L558-L559)).
 
 ### validate_mermaid.py
 
-Extracts and validates Mermaid diagram syntax using mermaid-cli (mmdc) ([validate_mermaid.py:2-7](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_mermaid.py#L2-L7)).
+`validate_mermaid.py` extracts Mermaid code blocks from Markdown and validates them with the Mermaid CLI (`mmdc`). `extract_mermaid_blocks` scans line by line for ` ```mermaid ` fences and records each block's code along with its start/end line and character positions ([validate_mermaid.py:86-141](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_mermaid.py#L86-L141)). It can accept a single file, a directory of `.md` files, a raw `--code` string, or a pre-extracted `--blocks` JSON ([validate_mermaid.py:737-790](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_mermaid.py#L737-L790)).
 
-**Usage:**
+Validation runs `mmdc` against a temporary `.mmd` file, rendering to a throwaway SVG; a zero return code means valid, otherwise the stderr is parsed ([validate_mermaid.py:477-533](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_mermaid.py#L477-L533)). `_parse_error` extracts a line number, `_classify_error` maps the message to a type such as `lexical_error`, `syntax_error`, `node_error`, or `edge_error`, and `_generate_fix_hint` returns a targeted remediation string ([validate_mermaid.py:376-474](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_mermaid.py#L376-L474)). If `mmdc` is not installed, `check_mermaid_cli_available` causes validation to return a `cli_unavailable` result rather than crashing ([validate_mermaid.py:335-347](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_mermaid.py#L335-L347)).
 
-```bash
-# Validate all diagrams in a directory
-python validate_mermaid.py --input ./docs/wiki/ --invalid-only
+The `--invalid-only` flag reduces the report to just the failing blocks plus counts of total scanned and files affected, which is the form consumed by the summary step ([validate_mermaid.py:754-762](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_mermaid.py#L754-L762)). Like the structure validator, `main` returns a non-zero exit code when any block is invalid ([validate_mermaid.py:802-811](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_mermaid.py#L802-L811)).
 
-# Validate a single file
-python validate_mermaid.py --input diagram.mmd
+### generate_summary.py
 
-# Validate code string directly
-python validate_mermaid.py --code "graph TD\n    A-->B"
-```
+`generate_summary.py` produces the human-readable `SUMMARY.md`. `analyze_docs` reads the TOC and each generated page, counting expected versus found AUTOGEN sections, citations, and Mermaid diagrams into a `SummaryData` aggregate ([generate_summary.py:173-287](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/generate_summary.py#L173-L287)). Citations are detected with a regex matching the `[file.ext:N](url)` / `[file.ext:N-M](url)` citation format, and diagrams are counted by ` ```mermaid ` fences ([generate_summary.py:134-152](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/generate_summary.py#L134-L152)).
 
-**Key Parameters:**
+It also computes source coverage by comparing the TOC's declared `source_files` (skipping glob patterns) against the filenames actually cited, splitting them into covered and uncovered lists ([generate_summary.py:247-270](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/generate_summary.py#L247-L270)). When available, it folds in the structure and Mermaid validation reports — by default reading them from `_reports/structure_validation.json` and `_reports/mermaid_invalid.json` under the doc directory ([generate_summary.py:461-476](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/generate_summary.py#L461-L476)). `generate_summary_md` then renders the overall status, per-page table, coverage sections, and a recommendations block, writing by default to `{doc_dir}/_reports/SUMMARY.md` ([generate_summary.py:290-413](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/generate_summary.py#L290-L413)).
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `--input` | One of input/code/blocks | File (.mmd) or directory (scans .md files) ([validate_mermaid.py:689-691](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_mermaid.py#L689-L691)) |
-| `--code` | One of input/code/blocks | Mermaid code string ([validate_mermaid.py:693-695](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_mermaid.py#L693-L695)) |
-| `--invalid-only` | No | Only output invalid blocks ([validate_mermaid.py:717-719](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_mermaid.py#L717-L719)) |
-| `--extract-only` | No | Only extract blocks, skip validation ([validate_mermaid.py:720-722](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_mermaid.py#L720-L722)) |
-
-**Diagram Type Detection:**
-
-The script detects diagram types (flowchart, sequence, class, state, er, gantt, pie, journey, gitgraph) from the first line of the code ([validate_mermaid.py:144-168](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_mermaid.py#L144-L168)).
-
-**Error Classification:**
-
-Errors are classified into types for better diagnosis ([validate_mermaid.py:376-394](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_mermaid.py#L376-L394)):
-
-| Error Type | Description |
-|------------|-------------|
-| `lexical_error` | Unrecognized text or character issues |
-| `syntax_error` | General syntax issues |
-| `node_error` | Problems with node definitions |
-| `edge_error` | Problems with arrows/edges |
-| `graph_structure_error` | Issues with diagram structure |
-| `cli_unavailable` | mmdc not installed |
-
-The script provides fix hints based on error patterns to help users correct issues ([validate_mermaid.py:397-443](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_mermaid.py#L397-L443)).
-
-Sources: [validate_docs_structure.py:2-28](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_docs_structure.py#L2-L28), [validate_mermaid.py:2-29](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/validate_mermaid.py#L2-L29)
-<!-- END:AUTOGEN deepwiki-skill_04_scripts_validation -->
-
----
-
-<!-- BEGIN:AUTOGEN deepwiki-skill_04_scripts_summary-generation -->
-## Summary Generation
-
-The `generate_summary.py` script creates a SUMMARY.md report that analyzes generated documentation and provides statistics on completion status ([generate_summary.py:2-9](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/generate_summary.py#L2-L9)).
-
-**Usage:**
-
-```bash
-python generate_summary.py --doc-dir docs/wiki --toc-file docs/wiki/toc.yaml
-```
-
-**Key Parameters:**
-
-| Parameter | Required | Default | Description |
-|-----------|----------|---------|-------------|
-| `--doc-dir` | Yes | - | Directory containing generated .md docs ([generate_summary.py:421-424](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/generate_summary.py#L421-L424)) |
-| `--toc-file` | Yes | - | Path to toc.yaml file ([generate_summary.py:425-428](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/generate_summary.py#L425-L428)) |
-| `--structure-report` | No | - | Path to structure_validation.json ([generate_summary.py:429-431](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/generate_summary.py#L429-L431)) |
-| `--mermaid-report` | No | - | Path to mermaid_invalid.json ([generate_summary.py:432-434](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/generate_summary.py#L432-L434)) |
-| `--output` | No | `{doc_dir}/_reports/SUMMARY.md` | Output path for SUMMARY.md ([generate_summary.py:435-437](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/generate_summary.py#L435-L437)) |
-
-**Report Contents:**
-
-The summary report includes the following sections ([generate_summary.py:290-413](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/generate_summary.py#L290-L413)):
-
-1. **Generation Status**: Overall completion metrics for pages, sections, citations, and diagrams
-2. **Page Details**: Per-page breakdown with section counts, citations, and status indicators
-3. **Source Coverage**: Lists covered and uncovered source files
-4. **Issues**: Errors that must be fixed and warnings
-5. **Recommendations**: Actionable suggestions for improvement
-
-**Page Statistics:**
-
-The script tracks statistics for each page using the `PageStats` dataclass ([generate_summary.py:44-63](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/generate_summary.py#L44-L63)):
-
-| Field | Description |
-|-------|-------------|
-| `filename` | Output filename |
-| `expected_sections` | Number of sections defined in TOC |
-| `found_sections` | Number of AUTOGEN sections found |
-| `citations` | Count of source citations |
-| `diagrams` | Count of Mermaid diagrams |
-| `has_page_id` | Whether PAGE_ID marker exists |
-
-**Citation Extraction:**
-
-Citations are extracted from markdown using pattern matching for formats like `[file.ext:N](url)` or `[file.ext:N-M](url)` ([generate_summary.py:134-145](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/generate_summary.py#L134-L145)).
-
-Sources: [generate_summary.py:2-25](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/generate_summary.py#L2-L25), [generate_summary.py:173-287](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/scripts/generate_summary.py#L173-L287)
-<!-- END:AUTOGEN deepwiki-skill_04_scripts_summary-generation -->
+Sources: [validate_docs_structure.py:155-524](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_docs_structure.py#L155-L524), [validate_mermaid.py:86-811](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/validate_mermaid.py#L86-L811), [generate_summary.py:134-413](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/scripts/generate_summary.py#L134-L413)
+<!-- END:AUTOGEN deepwiki-skill_04_scripts_validation-summary -->
 
 ---

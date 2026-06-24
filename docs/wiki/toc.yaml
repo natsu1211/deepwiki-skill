@@ -1,319 +1,241 @@
-# Table of Contents for deepwiki-skill wiki documentation
+# toc.yaml — Wiki Table of Contents for deepwiki-skill
 project:
   name: "deepwiki-skill"
-  description: "An AI agent skill that generates comprehensive, evidence-based wiki documentation for any codebase"
+  description: "A portable agent skill that generates DeepWiki-style, evidence-based wiki documentation with line-level source citations and validated Mermaid diagrams for any codebase, installable across AI coding agents via apm."
   repo_base_url: "https://github.com/natsu1211/deepwiki-skill/blob"
-  ref_commit_hash: "784d30af68157f49d7f829f85d49dafe9fba65cd"
-  updated_at: "2026-01-18"
+  ref_commit_hash: "5623db8cf158176a7d55791d6fb9bcb992834262"
+  updated_at: "2026-06-25"
 
 pages:
+  # ============================================================
+  # Page 1: Overview
+  # ============================================================
   - id: deepwiki-skill_01_overview
     title: "Overview"
     filename: "01_overview.md"
-    description: "Introduction to deepwiki-skill, its purpose, and key features"
+    description: "Project purpose, key features, and how deepwiki-skill is packaged and distributed."
     source_files:
       - "README.md"
-      - "skills/wiki/SKILL.md"
-      - ".claude-plugin/plugin.json"
+      - "README.zh-CN.md"
+      - "README.ja.md"
+      - "apm.yml"
+      - ".apm/skills/wiki/SKILL.md"
     sections:
       - id: deepwiki-skill_01_overview_introduction
         title: "Introduction"
-        description: "What deepwiki-skill is and why it exists"
+        description: "What deepwiki-skill is, the problem it solves, and who it is for."
         autogen: true
         diagrams_needed: false
         diagram_types: []
-      - id: deepwiki-skill_01_overview_key-features
+      - id: deepwiki-skill_01_overview_features
         title: "Key Features"
-        description: "Evidence-based documentation, Mermaid support, execution modes, multi-language output"
+        description: "Evidence-based citations, Mermaid validation, flexible execution modes, parallel processing, multi-language output."
         autogen: true
         diagrams_needed: false
         diagram_types: []
-      - id: deepwiki-skill_01_overview_installation
-        title: "Installation"
-        description: "How to install on Claude Code, Gemini CLI, and Codex"
+      - id: deepwiki-skill_01_overview_packaging
+        title: "Packaging and Distribution Model"
+        description: "How the skill, workflow-runner agent, and gen-wiki prompt are bundled as an apm hybrid package targeting multiple harnesses."
         autogen: true
-        diagrams_needed: false
-        diagram_types: []
-      - id: deepwiki-skill_01_overview_quick-start
-        title: "Quick Start"
-        description: "Basic usage examples and command arguments"
-        autogen: true
-        diagrams_needed: false
-        diagram_types: []
+        diagrams_needed: true
+        diagram_types: ["flowchart"]
     related_pages:
       - deepwiki-skill_02_architecture
-      - deepwiki-skill_03_workflow
+      - deepwiki-skill_06_cicd-installation
 
+  # ============================================================
+  # Page 2: Architecture
+  # ============================================================
   - id: deepwiki-skill_02_architecture
     title: "Architecture"
     filename: "02_architecture.md"
-    description: "System architecture and component organization"
+    description: "How the skill orchestrator, workflow-runner agent, and command prompt compose into a documentation pipeline."
     source_files:
-      - "skills/wiki/SKILL.md"
-      - "agents/workflow-runner.md"
-      - "commands/gen.md"
+      - ".apm/skills/wiki/SKILL.md"
+      - ".apm/agents/workflow-runner.agent.md"
+      - ".apm/prompts/gen-wiki.prompt.md"
+      - "apm.yml"
     sections:
       - id: deepwiki-skill_02_architecture_overview
-        title: "System Overview"
-        description: "High-level architecture and component relationships"
+        title: "System Architecture Overview"
+        description: "High-level view of the user command, skill orchestrator, agent runner, and outputs."
         autogen: true
         diagrams_needed: true
-        diagram_types:
-          - flowchart
-      - id: deepwiki-skill_02_architecture_skill-definition
-        title: "Skill Definition"
-        description: "SKILL.md structure, workflow phase definitions, execution modes"
+        diagram_types: ["flowchart"]
+      - id: deepwiki-skill_02_architecture_primitives
+        title: "Core Primitives"
+        description: "The three apm primitives — wiki skill, workflow-runner agent, gen-wiki prompt — and their responsibilities."
         autogen: true
-        source_files:
-          - "skills/wiki/SKILL.md"
         diagrams_needed: false
         diagram_types: []
-      - id: deepwiki-skill_02_architecture_command-interface
-        title: "Command Interface"
-        description: "gen.md command parsing and argument handling"
-        autogen: true
-        source_files:
-          - "commands/gen.md"
-        diagrams_needed: false
-        diagram_types: []
-      - id: deepwiki-skill_02_architecture_workflow-runner
-        title: "Workflow Runner Agent"
-        description: "Subagent for executing workflow phases"
-        autogen: true
-        source_files:
-          - "agents/workflow-runner.md"
-        diagrams_needed: false
-        diagram_types: []
-      - id: deepwiki-skill_02_architecture_execution-modes
-        title: "Execution Modes"
-        description: "Automatic, Structure-only, TOC-based, and Incremental modes"
+      - id: deepwiki-skill_02_architecture_orchestration
+        title: "Orchestration and Subagent Dispatch"
+        description: "How SKILL.md selects execution modes and dispatches phases to the workflow-runner, including parallel doc-write."
         autogen: true
         diagrams_needed: true
-        diagram_types:
-          - flowchart
+        diagram_types: ["sequence"]
     related_pages:
       - deepwiki-skill_01_overview
       - deepwiki-skill_03_workflow
 
+  # ============================================================
+  # Page 3: Workflow Phases
+  # ============================================================
   - id: deepwiki-skill_03_workflow
-    title: "Workflow Phases"
+    title: "Workflow Phases and Execution Modes"
     filename: "03_workflow.md"
-    description: "Detailed documentation of the six workflow phases"
+    description: "The six documentation phases, their inputs/outputs, and how execution modes chain them together."
     source_files:
-      - "skills/wiki/references/workflow/repo-scan.md"
-      - "skills/wiki/references/workflow/toc-design.md"
-      - "skills/wiki/references/workflow/doc-write.md"
-      - "skills/wiki/references/workflow/validate-docs.md"
-      - "skills/wiki/references/workflow/doc-summary.md"
-      - "skills/wiki/references/workflow/incremental-sync.md"
+      - ".apm/skills/wiki/references/workflow/repo-scan.md"
+      - ".apm/skills/wiki/references/workflow/toc-design.md"
+      - ".apm/skills/wiki/references/workflow/doc-write.md"
+      - ".apm/skills/wiki/references/workflow/validate-docs.md"
+      - ".apm/skills/wiki/references/workflow/doc-summary.md"
+      - ".apm/skills/wiki/references/workflow/incremental-sync.md"
     sections:
-      - id: deepwiki-skill_03_workflow_phase-overview
-        title: "Phase Overview"
-        description: "Summary of all six phases and their purposes"
+      - id: deepwiki-skill_03_workflow_modes
+        title: "Execution Modes"
+        description: "Automatic, structure-only, TOC-based, and incremental modes and the phase sequences they trigger."
         autogen: true
         diagrams_needed: true
-        diagram_types:
-          - flowchart
-      - id: deepwiki-skill_03_workflow_repo-scan
-        title: "Phase 1: Repository Scan"
-        description: "Collecting project context and structure"
+        diagram_types: ["flowchart"]
+      - id: deepwiki-skill_03_workflow_generation-phases
+        title: "Generation Phases (repo-scan, toc-design, doc-write)"
+        description: "How the pipeline scans the repo, designs the TOC, and writes evidence-based pages."
         autogen: true
-        source_files:
-          - "skills/wiki/references/workflow/repo-scan.md"
         diagrams_needed: false
         diagram_types: []
-      - id: deepwiki-skill_03_workflow_toc-design
-        title: "Phase 2: TOC Design"
-        description: "Designing wiki structure and generating toc.yaml"
+      - id: deepwiki-skill_03_workflow_validation-phases
+        title: "Validation and Summary Phases (validate-docs, doc-summary)"
+        description: "How generated docs are validated for structure and Mermaid syntax and summarized into a report."
         autogen: true
-        source_files:
-          - "skills/wiki/references/workflow/toc-design.md"
         diagrams_needed: false
         diagram_types: []
-      - id: deepwiki-skill_03_workflow_doc-write
-        title: "Phase 3: Document Writing"
-        description: "Generating evidence-based documentation pages"
+      - id: deepwiki-skill_03_workflow_incremental
+        title: "Incremental Sync Phase"
+        description: "How TOC and source changes are detected to update docs without full regeneration."
         autogen: true
-        source_files:
-          - "skills/wiki/references/workflow/doc-write.md"
-        diagrams_needed: false
-        diagram_types: []
-      - id: deepwiki-skill_03_workflow_validate-docs
-        title: "Phase 4: Document Validation"
-        description: "Validating structure and Mermaid diagrams"
-        autogen: true
-        source_files:
-          - "skills/wiki/references/workflow/validate-docs.md"
-        diagrams_needed: false
-        diagram_types: []
-      - id: deepwiki-skill_03_workflow_doc-summary
-        title: "Phase 5: Summary Generation"
-        description: "Generating SUMMARY.md report"
-        autogen: true
-        source_files:
-          - "skills/wiki/references/workflow/doc-summary.md"
-        diagrams_needed: false
-        diagram_types: []
-      - id: deepwiki-skill_03_workflow_incremental-sync
-        title: "Phase 6: Incremental Sync"
-        description: "Detecting changes and updating affected sections"
-        autogen: true
-        source_files:
-          - "skills/wiki/references/workflow/incremental-sync.md"
-        diagrams_needed: false
-        diagram_types: []
+        diagrams_needed: true
+        diagram_types: ["flowchart"]
     related_pages:
       - deepwiki-skill_02_architecture
       - deepwiki-skill_04_scripts
 
+  # ============================================================
+  # Page 4: Scripts
+  # ============================================================
   - id: deepwiki-skill_04_scripts
-    title: "Python Scripts"
+    title: "Python Helper Scripts"
     filename: "04_scripts.md"
-    description: "Documentation of the Python utility scripts"
+    description: "The deterministic Python utilities that back each phase: context collection, file reading, diffing, summary, and validation."
     source_files:
-      - "skills/wiki/scripts/*.py"
+      - ".apm/skills/wiki/scripts/collect_context.py"
+      - ".apm/skills/wiki/scripts/collect_git_diff.py"
+      - ".apm/skills/wiki/scripts/collect_sync_context.py"
+      - ".apm/skills/wiki/scripts/collect_update_context.py"
+      - ".apm/skills/wiki/scripts/generate_summary.py"
+      - ".apm/skills/wiki/scripts/get_section_update_diff.py"
+      - ".apm/skills/wiki/scripts/read_files.py"
+      - ".apm/skills/wiki/scripts/validate_docs_structure.py"
+      - ".apm/skills/wiki/scripts/validate_mermaid.py"
+      - ".apm/skills/wiki/scripts/requirements.txt"
     sections:
-      - id: deepwiki-skill_04_scripts_overview
-        title: "Scripts Overview"
-        description: "Summary of available scripts and their purposes"
-        autogen: true
-        diagrams_needed: false
-        diagram_types: []
       - id: deepwiki-skill_04_scripts_context-collection
         title: "Context Collection Scripts"
-        description: "collect_context.py and related context gathering scripts"
+        description: "collect_context, collect_sync_context, collect_update_context, and read_files for gathering repo context and source content."
         autogen: true
-        source_files:
-          - "skills/wiki/scripts/collect_context.py"
-          - "skills/wiki/scripts/collect_sync_context.py"
-          - "skills/wiki/scripts/collect_update_context.py"
-          - "skills/wiki/scripts/collect_git_diff.py"
         diagrams_needed: false
         diagram_types: []
-      - id: deepwiki-skill_04_scripts_file-reading
-        title: "File Reading"
-        description: "read_files.py for reading source files with line numbers"
+      - id: deepwiki-skill_04_scripts_diff
+        title: "Git Diff Scripts"
+        description: "collect_git_diff and get_section_update_diff for line-numbered change detection across commits."
         autogen: true
-        source_files:
-          - "skills/wiki/scripts/read_files.py"
         diagrams_needed: false
         diagram_types: []
-      - id: deepwiki-skill_04_scripts_validation
-        title: "Validation Scripts"
-        description: "validate_docs_structure.py and validate_mermaid.py"
+      - id: deepwiki-skill_04_scripts_validation-summary
+        title: "Validation and Summary Scripts"
+        description: "validate_docs_structure, validate_mermaid, and generate_summary for quality gates and reporting."
         autogen: true
-        source_files:
-          - "skills/wiki/scripts/validate_docs_structure.py"
-          - "skills/wiki/scripts/validate_mermaid.py"
-        diagrams_needed: false
-        diagram_types: []
-      - id: deepwiki-skill_04_scripts_summary-generation
-        title: "Summary Generation"
-        description: "generate_summary.py for creating SUMMARY.md"
-        autogen: true
-        source_files:
-          - "skills/wiki/scripts/generate_summary.py"
         diagrams_needed: false
         diagram_types: []
     related_pages:
       - deepwiki-skill_03_workflow
       - deepwiki-skill_05_policies
 
+  # ============================================================
+  # Page 5: Policies and Schema
+  # ============================================================
   - id: deepwiki-skill_05_policies
-    title: "Reference Policies"
+    title: "Policies, Schema, and Templates"
     filename: "05_policies.md"
-    description: "Documentation policies and guidelines for wiki generation"
+    description: "The reference documents that govern output structure, citations, diagrams, validation, and incremental updates."
     source_files:
-      - "skills/wiki/references/evidence_citation_policy.md"
-      - "skills/wiki/references/mermaid_policy.md"
-      - "skills/wiki/references/validation_policy.md"
-      - "skills/wiki/references/doc_update_policy.md"
-      - "skills/wiki/references/page_template.md"
-      - "skills/wiki/references/toc_schema.md"
+      - ".apm/skills/wiki/references/toc_schema.md"
+      - ".apm/skills/wiki/references/page_template.md"
+      - ".apm/skills/wiki/references/evidence_citation_policy.md"
+      - ".apm/skills/wiki/references/mermaid_policy.md"
+      - ".apm/skills/wiki/references/validation_policy.md"
+      - ".apm/skills/wiki/references/doc_update_policy.md"
+      - ".apm/skills/wiki/templates/toc.yaml.template"
     sections:
-      - id: deepwiki-skill_05_policies_evidence-citation
-        title: "Evidence Citation Policy"
-        description: "Requirements for source code citations and line references"
-        autogen: true
-        source_files:
-          - "skills/wiki/references/evidence_citation_policy.md"
-        diagrams_needed: false
-        diagram_types: []
-      - id: deepwiki-skill_05_policies_mermaid
-        title: "Mermaid Diagram Policy"
-        description: "Guidelines for generating Mermaid diagrams"
-        autogen: true
-        source_files:
-          - "skills/wiki/references/mermaid_policy.md"
-        diagrams_needed: false
-        diagram_types: []
-      - id: deepwiki-skill_05_policies_validation
-        title: "Validation Policy"
-        description: "Document structure validation requirements"
-        autogen: true
-        source_files:
-          - "skills/wiki/references/validation_policy.md"
-        diagrams_needed: false
-        diagram_types: []
-      - id: deepwiki-skill_05_policies_doc-update
-        title: "Document Update Policy"
-        description: "Guidelines for incremental documentation updates"
-        autogen: true
-        source_files:
-          - "skills/wiki/references/doc_update_policy.md"
-        diagrams_needed: false
-        diagram_types: []
-      - id: deepwiki-skill_05_policies_page-template
-        title: "Page Template"
-        description: "Standard format for generated wiki pages"
-        autogen: true
-        source_files:
-          - "skills/wiki/references/page_template.md"
-        diagrams_needed: false
-        diagram_types: []
       - id: deepwiki-skill_05_policies_toc-schema
-        title: "TOC Schema"
-        description: "Schema specification for toc.yaml files"
+        title: "TOC Schema and Template"
+        description: "The toc.yaml schema, ID conventions, page/section structure, and the starter template."
         autogen: true
-        source_files:
-          - "skills/wiki/references/toc_schema.md"
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_05_policies_content
+        title: "Content Policies"
+        description: "Page template markers, evidence citation rules, and Mermaid diagram conventions that shape generated content."
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_05_policies_validation-update
+        title: "Validation and Update Policies"
+        description: "Document validation rules and the two-phase incremental update algorithm."
+        autogen: true
         diagrams_needed: false
         diagram_types: []
     related_pages:
       - deepwiki-skill_03_workflow
       - deepwiki-skill_04_scripts
 
-  - id: deepwiki-skill_06_cicd
-    title: "CI/CD Integration"
+  # ============================================================
+  # Page 6: CI/CD and Installation
+  # ============================================================
+  - id: deepwiki-skill_06_cicd-installation
+    title: "Installation and CI/CD Integration"
     filename: "06_cicd.md"
-    description: "Integrating deepwiki-skill into CI/CD pipelines"
+    description: "How to install deepwiki-skill via apm and run it inside CI/CD pipelines such as GitHub Actions."
     source_files:
       - "README.md"
+      - "apm.yml"
+      - ".apm/skills/wiki/scripts/requirements.txt"
     sections:
-      - id: deepwiki-skill_06_cicd_overview
-        title: "CI/CD Overview"
-        description: "Benefits of CI/CD integration for documentation"
+      - id: deepwiki-skill_06_cicd-installation_prerequisites
+        title: "Prerequisites and Installation"
+        description: "Python and Mermaid CLI requirements, and installing the package with apm locally or globally."
         autogen: true
         diagrams_needed: false
         diagram_types: []
-      - id: deepwiki-skill_06_cicd_github-actions
-        title: "GitHub Actions Integration"
-        description: "Setting up wiki generation with GitHub Actions and Claude Code"
+      - id: deepwiki-skill_06_cicd-installation_usage
+        title: "Command Usage"
+        description: "Invoking the skill directly or via the gen-wiki command with its CLI-style arguments."
+        autogen: true
+        diagrams_needed: false
+        diagram_types: []
+      - id: deepwiki-skill_06_cicd-installation_pipelines
+        title: "CI/CD Pipeline Integration"
+        description: "The GitHub Actions workflow for automated, incremental documentation updates and the Codex alternative."
         autogen: true
         diagrams_needed: true
-        diagram_types:
-          - flowchart
-      - id: deepwiki-skill_06_cicd_other-platforms
-        title: "Other Platforms"
-        description: "Integration with Gemini CLI and Codex in CI/CD"
-        autogen: true
-        diagrams_needed: false
-        diagram_types: []
+        diagram_types: ["flowchart"]
     related_pages:
       - deepwiki-skill_01_overview
+      - deepwiki-skill_03_workflow
 
 notes:
-  - "This project is an AI agent skill for generating wiki documentation"
-  - "Primary language is Python for scripts and Markdown for documentation/configs"
-  - "Supports Claude Code, Gemini CLI, and Codex as host agents"
-  - "Features evidence-based citations with line numbers and Mermaid diagram validation"
+  - "deepwiki-skill is a tooling/DevOps project: an apm 'hybrid' package bundling a wiki skill, a workflow-runner agent, and a gen-wiki prompt."
+  - "Page groupings follow logical function rather than directory names: orchestration primitives, workflow phases, helper scripts, and governing policies are separated."
+  - "Source files live under .apm/ at author time; apm compiles them into harness-specific locations (e.g. .claude/skills/wiki/) at install time."
+  - "The project is small (33 files); a focused 6-page structure covers all major aspects without fragmentation."

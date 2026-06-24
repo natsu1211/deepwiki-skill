@@ -1,451 +1,155 @@
 <!-- PAGE_ID: deepwiki-skill_03_workflow -->
 <details>
-<summary>Relevant source files</summary>
+<summary>📚 Relevant source files</summary>
 
 The following files were used as context for generating this wiki page:
 
-- [repo-scan.md:1-94](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/repo-scan.md#L1-L94)
-- [toc-design.md:1-116](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/toc-design.md#L1-L116)
-- [doc-write.md:1-127](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-write.md#L1-L127)
-- [validate-docs.md:1-202](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/validate-docs.md#L1-L202)
-- [doc-summary.md:1-127](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-summary.md#L1-L127)
-- [incremental-sync.md:1-162](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L1-L162)
+- [repo-scan.md:1-94](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/repo-scan.md#L1-L94)
+- [toc-design.md:1-116](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/toc-design.md#L1-L116)
+- [doc-write.md:1-127](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-write.md#L1-L127)
+- [validate-docs.md:1-202](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/validate-docs.md#L1-L202)
+- [doc-summary.md:1-127](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-summary.md#L1-L127)
+- [incremental-sync.md:1-162](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/incremental-sync.md#L1-L162)
 
 </details>
 
-# Workflow Phases
+# Workflow Phases and Execution Modes
 
-> **Related Pages**: [[Architecture|02_architecture.md]], [[Python Scripts|04_scripts.md]]
+> **Related Pages**: [[Architecture|02_architecture.md]], [[Python Helper Scripts|04_scripts.md]]
 
 ---
 
-<!-- BEGIN:AUTOGEN deepwiki-skill_03_workflow_phase-overview -->
-## Phase Overview
+<!-- BEGIN:AUTOGEN deepwiki-skill_03_workflow_modes -->
+## Execution Modes
 
-The deepwiki-skill workflow consists of six sequential phases that transform a codebase into comprehensive, evidence-based wiki documentation. Each phase has a specific goal, defined inputs and outputs, and relies on dedicated Python scripts for execution ([repo-scan.md:1-5](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/repo-scan.md#L1-L5)).
+Documentation generation is decomposed into six discrete phases, each defined by its own specification file under `.apm/skills/wiki/references/workflow/`. The phases are numbered to reflect their default ordering: repo-scan (Phase 1), toc-design (Phase 2), doc-write (Phase 3), validate-docs (Phase 4), doc-summary (Phase 5), and incremental-sync (Phase 6) ([repo-scan.md:1](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/repo-scan.md#L1), [doc-summary.md:1](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-summary.md#L1), [incremental-sync.md:1](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/incremental-sync.md#L1)).
 
-The workflow supports multiple execution modes, allowing users to run the complete pipeline or specific phases depending on their needs.
+Execution modes are different entry points and chains over these phases. The phase specs themselves expose hooks that distinguish the modes: each phase that consumes prior output declares that input with a default pointing at the previous phase's artifact, so the phases form a chain that can be entered at any point where its inputs already exist.
+
+- A **full (automatic) generation** runs the chain end to end: repo-scan produces `context_pack.json`, which feeds toc-design to produce `toc.yaml`, which feeds doc-write to produce the pages, which validate-docs and doc-summary then check and report on. The chaining is visible in the input defaults — toc-design defaults its `context_pack` input to `{output_dir}/_context/context_pack.json`, the artifact written by repo-scan ([toc-design.md:13](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/toc-design.md#L13), [repo-scan.md:21](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/repo-scan.md#L21)).
+- A **structure-only** entry stops after toc-design, producing only `{output_dir}/toc.yaml` without writing any pages ([toc-design.md:18-20](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/toc-design.md#L18-L20)).
+- A **TOC-based** entry skips scanning and design and begins at doc-write, which generates pages directly from an existing `{toc_file}` ([doc-write.md:5](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-write.md#L5)).
+- An **incremental** entry begins at incremental-sync, which detects what changed and hands off to a scoped doc-write that regenerates only affected pages and sections ([incremental-sync.md:5-9](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/incremental-sync.md#L5-L9), [incremental-sync.md:154-156](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/incremental-sync.md#L154-L156)).
+
+The following diagram shows how the four entry points map onto the shared phase chain.
 
 ```mermaid
 graph TD
-    subgraph Phase1
-        A["Phase 1: Repository Scan"]
-    end
+    A["repo-scan (P1)"] --> B["toc-design (P2)"]
+    B --> C["doc-write (P3)"]
+    C --> D["validate-docs (P4)"]
+    D --> E["doc-summary (P5)"]
+    F["incremental-sync (P6)"] --> C
 
-    subgraph Phase2
-        B["Phase 2: TOC Design"]
+    subgraph Automatic
+        A
     end
-
-    subgraph Phase3
-        C["Phase 3: Document Writing"]
+    subgraph StructureOnly
+        B
     end
-
-    subgraph Phase4
-        D["Phase 4: Document Validation"]
+    subgraph TocBased
+        C
     end
-
-    subgraph Phase5
-        E["Phase 5: Summary Generation"]
+    subgraph Incremental
+        F
     end
-
-    subgraph Phase6
-        F["Phase 6: Incremental Sync"]
-    end
-
-    A -->|"context_pack.json"| B
-    B -->|"toc.yaml"| C
-    C -->|"*.md files"| D
-    D -->|"validation reports"| E
-    F -->|"update context"| C
 ```
 
-| Phase | Name | Purpose | Primary Output |
-|-------|------|---------|----------------|
-| 1 | Repository Scan | Collect project context and structure | `context_pack.json` |
-| 2 | TOC Design | Design wiki structure from context | `toc.yaml` |
-| 3 | Document Writing | Generate evidence-based pages | `*.md` files |
-| 4 | Document Validation | Validate structure and diagrams | Validation reports |
-| 5 | Summary Generation | Generate documentation summary | `SUMMARY.md` |
-| 6 | Incremental Sync | Detect changes for updates | Update context |
-
-Sources: [repo-scan.md:1-5](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/repo-scan.md#L1-L5), [toc-design.md:1-5](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/toc-design.md#L1-L5), [doc-write.md:1-9](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-write.md#L1-L9), [validate-docs.md:1-8](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/validate-docs.md#L1-L8), [doc-summary.md:1-9](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-summary.md#L1-L9), [incremental-sync.md:1-9](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L1-L9)
-<!-- END:AUTOGEN deepwiki-skill_03_workflow_phase-overview -->
+Sources: [repo-scan.md:1-21](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/repo-scan.md#L1-L21), [toc-design.md:1-20](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/toc-design.md#L1-L20), [doc-write.md:1-5](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-write.md#L1-L5), [incremental-sync.md:1-9](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/incremental-sync.md#L1-L9)
+<!-- END:AUTOGEN deepwiki-skill_03_workflow_modes -->
 
 ---
 
-<!-- BEGIN:AUTOGEN deepwiki-skill_03_workflow_repo-scan -->
-## Phase 1: Repository Scan
+<!-- BEGIN:AUTOGEN deepwiki-skill_03_workflow_generation-phases -->
+## Generation Phases (repo-scan, toc-design, doc-write)
 
-The repository scan phase collects project context needed for TOC design and documentation generation. It analyzes the repository structure, identifies programming languages, and extracts README content ([repo-scan.md:3-5](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/repo-scan.md#L3-L5)).
+The three generation phases turn a raw repository into evidence-based wiki pages. Each phase declares a single, deterministic Python script as its only sanctioned tool and writes a well-defined artifact that the next phase consumes.
 
-### Inputs and Outputs
+### repo-scan (Phase 1)
 
-| Type | Name | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| Input | `repo_path` | Yes | - | Absolute path to the target repository ([repo-scan.md:11](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/repo-scan.md#L11)) |
-| Input | `output_dir` | No | `docs/wiki` | Documentation output directory ([repo-scan.md:12](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/repo-scan.md#L12)) |
-| Input | `max_depth` | No | `10` | Max scan depth ([repo-scan.md:15](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/repo-scan.md#L15)) |
-| Output | `context_pack.json` | - | - | Project context JSON for `toc-design` ([repo-scan.md:21](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/repo-scan.md#L21)) |
+The goal of repo-scan is to "collect project context needed for TOC design and documentation generation" ([repo-scan.md:5](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/repo-scan.md#L5)). It validates that `repo_path` exists and checks for a `.git` folder, collects git metadata (`git rev-parse --show-toplevel`, `git remote get-url origin`, `git rev-parse HEAD`), then runs `collect_context.py` to scan the tree ([repo-scan.md:72-89](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/repo-scan.md#L72-L89)). The spec is emphatic that `collect_context.py` is the only collector: "DO NOT use any other ad-hoc script" ([repo-scan.md:25](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/repo-scan.md#L25)). Its single output is `{output_dir}/_context/context_pack.json`, a JSON document containing the directory tree, file/language statistics, and README content ([repo-scan.md:21](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/repo-scan.md#L21), [repo-scan.md:45-67](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/repo-scan.md#L45-L67)).
 
-### Script: collect_context.py
+### toc-design (Phase 2)
 
-The phase uses `collect_context.py` to collect project context ([repo-scan.md:25](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/repo-scan.md#L25)):
+toc-design consumes `context_pack.json` and produces `{output_dir}/toc.yaml` following the schema ([toc-design.md:13](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/toc-design.md#L13), [toc-design.md:18-20](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/toc-design.md#L18-L20)). Rather than mechanically mapping folders to pages, the phase mandates a content-driven design: it reviews context, reads representative files with `read_files.py`, identifies logical groupings, then designs pages and sections around them. The spec explicitly warns "DO NOT simply map folder names to pages" ([toc-design.md:50-72](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/toc-design.md#L50-L72)). Its validation gates require that all page/section IDs are unique, use kebab-case with no special characters, every page has at least one `source_files` entry, and nesting is at most three levels deep ([toc-design.md:112-116](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/toc-design.md#L112-L116)).
 
-```bash
-python3 /scripts/collect_context.py \
-  --repo-path "{repo_path}" \
-  --max-depth 10 \
-  --output "{output_dir}/_context/context_pack.json"
-```
+### doc-write (Phase 3)
 
-### Output Structure
+doc-write generates the actual Markdown pages from `{toc_file}`, with "stable PAGE_ID markers", AUTOGEN markers for every generated section, "strict source citations with line numbers", and Mermaid diagrams where the TOC requests them ([doc-write.md:5-9](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-write.md#L5-L9)). For accurate citations it relies on `read_files.py`, instructing the runner to "Never use ad-hoc file reads if citation is needed" ([doc-write.md:21](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-write.md#L21)).
 
-The generated `context_pack.json` contains the repository structure, README content, and metadata ([repo-scan.md:45-67](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/repo-scan.md#L45-L67)):
+The phase walks the TOC recursively. Page-level `source_files` are shared by all sections, and each section may add its own; for every `autogen` section the two lists are merged, glob patterns are resolved, and the files are read with line numbers ([doc-write.md:80-104](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-write.md#L80-L104)). The `source_files` are treated as the primary reference, but the runner may read additional files (base classes, interfaces, referenced types) when comprehension requires it ([doc-write.md:105-109](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-write.md#L105-L109)). Output is written to `{output_dir}/` following the page template, with diagrams generated where `diagrams_needed: true` ([doc-write.md:117-127](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-write.md#L117-L127)).
 
-```json
-{
-  "structure": {
-    "tree": "...",
-    "file_count": 42,
-    "directory_count": 8,
-    "total_size": 156300,
-    "languages": {"Python": 25, "JavaScript": 10}
-  },
-  "readme": {
-    "content": "...",
-    "path": "README.md"
-  },
-  "metadata": {
-    "repo_path": "/path/to/repo",
-    "has_readme": true
-  }
-}
-```
+The table below summarizes the input, primary script, and output artifact of each generation phase.
 
-### Workflow Steps
+| Phase | Primary Script | Key Output |
+|-------|----------------|------------|
+| repo-scan | `collect_context.py` ([repo-scan.md:25](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/repo-scan.md#L25)) | `_context/context_pack.json` ([repo-scan.md:21](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/repo-scan.md#L21)) |
+| toc-design | `read_files.py` ([toc-design.md:24](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/toc-design.md#L24)) | `toc.yaml` ([toc-design.md:20](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/toc-design.md#L20)) |
+| doc-write | `read_files.py` ([doc-write.md:19-21](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-write.md#L19-L21)) | `{output_dir}/*.md` pages ([doc-write.md:127](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-write.md#L127)) |
 
-1. **Validate repository**: Verify `repo_path` exists and is a directory, check if it's a git repository ([repo-scan.md:72-74](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/repo-scan.md#L72-L74))
-2. **Collect git metadata**: Get repo root, remote URL, and commit hash ([repo-scan.md:76-81](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/repo-scan.md#L76-L81))
-3. **Run context collection**: Execute the `collect_context.py` script ([repo-scan.md:83-88](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/repo-scan.md#L83-L88))
-
-Sources: [repo-scan.md:1-94](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/repo-scan.md#L1-L94)
-<!-- END:AUTOGEN deepwiki-skill_03_workflow_repo-scan -->
+Sources: [repo-scan.md:5-89](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/repo-scan.md#L5-L89), [toc-design.md:13-116](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/toc-design.md#L13-L116), [doc-write.md:5-127](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-write.md#L5-L127)
+<!-- END:AUTOGEN deepwiki-skill_03_workflow_generation-phases -->
 
 ---
 
-<!-- BEGIN:AUTOGEN deepwiki-skill_03_workflow_toc-design -->
-## Phase 2: TOC Design
+<!-- BEGIN:AUTOGEN deepwiki-skill_03_workflow_validation-phases -->
+## Validation and Summary Phases (validate-docs, doc-summary)
 
-The TOC design phase analyzes the collected project context and creates a logical wiki structure. It produces a `toc.yaml` file that defines pages, sections, source file mappings, and diagram requirements ([toc-design.md:3-5](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/toc-design.md#L3-L5)).
+After pages are written, two phases enforce quality and produce a human-readable report.
 
-### Inputs and Outputs
+### validate-docs (Phase 4)
 
-| Type | Name | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| Input | `repo_path` | Yes | - | Absolute repository path ([toc-design.md:11](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/toc-design.md#L11)) |
-| Input | `context_pack` | No | `{output_dir}/_context/context_pack.json` | Context JSON from Phase 1 ([toc-design.md:13](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/toc-design.md#L13)) |
-| Input | `language` | No | `en-US` | Output language/locale ([toc-design.md:14](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/toc-design.md#L14)) |
-| Output | `toc.yaml` | - | - | TOC definition following schema ([toc-design.md:20](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/toc-design.md#L20)) |
+validate-docs checks that "Mermaid diagrams compile" and that "Document structure is consistent (PAGE_ID markers, AUTOGEN markers, no overlaps)" ([validate-docs.md:5-7](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/validate-docs.md#L5-L7)). It runs two scripts and emits two reports plus in-place fixes restricted to "Mermaid blocks and/or missing structural markers only" ([validate-docs.md:20-24](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/validate-docs.md#L20-L24)).
 
-### Structure Design Process
+The first script, `validate_mermaid.py`, extracts and validates Mermaid diagrams using the Mermaid CLI (`mmdc`) and writes invalid blocks to `{output_dir}/_reports/mermaid_invalid.json` ([validate-docs.md:85-87](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/validate-docs.md#L85-L87), [validate-docs.md:154-171](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/validate-docs.md#L154-L171)). The workflow handles three outcomes explicitly: if the CLI is unavailable (`error_type: cli_unavailable`) it must not attempt fixes and instead records the limitation; if invalid blocks exist it fixes each diagram for up to three attempts guided by `mermaid_policy.md` and the `fix_hint`, then re-runs; and if a diagram is still invalid after three attempts it comments out the block and adds a TODO ([validate-docs.md:162-169](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/validate-docs.md#L162-L169)).
 
-The workflow for designing the wiki structure involves several key steps ([toc-design.md:46-72](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/toc-design.md#L46-L72)):
+The second script, `validate_docs_structure.py`, validates structure against the TOC: PAGE_ID markers, AUTOGEN markers, and internal links, classifying issues into categories such as `page_id`, `autogen`, `structure`, `link`, and `toc` ([validate-docs.md:28-30](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/validate-docs.md#L28-L30), [validate-docs.md:75-83](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/validate-docs.md#L75-L83)). When `summary.is_valid == false`, the runner applies safe fixes (adding missing PAGE_ID/AUTOGEN markers, correcting mismatched section IDs, removing orphaned markers) and re-runs to confirm, but must "NOT rewrite page content" ([validate-docs.md:183-202](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/validate-docs.md#L183-L202)).
 
-1. **Review Context**: Examine project structure and README to understand purpose and features
-2. **Deep Dive into Code**: Read representative files using `read_files.py` to understand actual implementation
-3. **Identify Logical Groupings**: Group related functionality based on actual code content
-4. **Design Wiki Structure**: Create pages based on logical groupings with appropriate source file mappings
-5. **Write toc.yaml**: Generate the TOC file following the schema specification
+### doc-summary (Phase 5)
 
-### Design Principles
-
-The phase considers the project type when deciding page categories ([toc-design.md:76-97](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/toc-design.md#L76-L97)):
-
-| Project Type | Typical Categories |
-|--------------|-------------------|
-| Web application | Frontend, Backend, API, Deployment |
-| Library/Framework | Architecture, Core APIs, Usage Guide, Extension |
-| Data pipeline | Data Sources, Processing, Storage, Orchestration |
-| DevOps tool | Configuration, Workflow, Integration, Monitoring |
-
-### Page Count Guidelines
-
-| Project Size | Files | Recommended Pages |
-|--------------|-------|-------------------|
-| Small | < 10 | 3-5 pages |
-| Medium | 10-50 | 5-8 pages |
-| Large | 50-200 | 8-12 pages |
-| Very Large | > 200 | 10-15 pages |
-
-([toc-design.md:99-105](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/toc-design.md#L99-L105))
-
-Sources: [toc-design.md:1-116](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/toc-design.md#L1-L116)
-<!-- END:AUTOGEN deepwiki-skill_03_workflow_toc-design -->
-
----
-
-<!-- BEGIN:AUTOGEN deepwiki-skill_03_workflow_doc-write -->
-## Phase 3: Document Writing
-
-The document writing phase generates evidence-based wiki pages from the `toc.yaml` specification. Each generated page includes stable PAGE_ID markers, AUTOGEN markers for all generated sections, strict source citations with line numbers, and Mermaid diagrams where requested ([doc-write.md:3-9](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-write.md#L3-L9)).
-
-### Script: read_files.py
-
-The phase uses `read_files.py` to read source files with line numbers for accurate citations ([doc-write.md:19-21](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-write.md#L19-L21)):
-
-```bash
-python3 /scripts/read_files.py \
-  --repo-path "{repo_path}" \
-  --files '["path/to/file1", "src/**/*.cs"]' \
-  --line-numbers
-```
-
-The script supports glob patterns for file selection ([doc-write.md:41-45](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-write.md#L41-L45)):
-- `*` matches any characters except `/`
-- `**` matches any characters including `/` (recursive)
-- `?` matches a single character
-
-### Page Generation Process
-
-For each page in `toc.yaml`, the phase follows this process ([doc-write.md:67-76](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-write.md#L67-L76)):
-
-1. **Parse TOC Structure**: Read page definition, extract page-level source_files, extract all sections with their attributes
-2. **Collect Evidence**: For each autogen section, merge page-level and section-level source files, read files with line numbers
-3. **Generate Content**: Combine sections following the page template, add source citations, generate Mermaid diagrams where needed
-
-### Section Processing Algorithm
-
-The section processing follows a recursive pattern that handles nested sections ([doc-write.md:78-114](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-write.md#L78-L114)):
-
-```
-function process_section(section, page_source_files, heading_level):
-    if section.autogen == true:
-        # Merge page-level and section-level source files
-        all_source_files = page_source_files + section.source_files
-
-        # Read files for citation
-        section_files = read_files(all_source_files)
-
-    # Process nested sections recursively
-    for each subsection in section.sections:
-        process_section(subsection, page_source_files, heading_level + 1)
-```
-
-### Output Requirements
-
-The generated pages must follow strict formatting requirements ([doc-write.md:122-127](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-write.md#L122-L127)):
-- Output format strictly follows the page template specification
-- Each section cites from its specific source files
-- Markdown files are output to the designated output directory
-
-Sources: [doc-write.md:1-127](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-write.md#L1-L127)
-<!-- END:AUTOGEN deepwiki-skill_03_workflow_doc-write -->
-
----
-
-<!-- BEGIN:AUTOGEN deepwiki-skill_03_workflow_validate-docs -->
-## Phase 4: Document Validation
-
-The validation phase ensures the generated documentation is correct and consistent. It validates Mermaid diagrams, checks document structure for proper markers, and applies safe fixes where needed ([validate-docs.md:3-8](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/validate-docs.md#L3-L8)).
-
-### Outputs
-
-| Path | Description |
-|------|-------------|
-| `{output_dir}/_reports/mermaid_invalid.json` | Invalid Mermaid blocks report ([validate-docs.md:22](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/validate-docs.md#L22)) |
-| `{output_dir}/_reports/structure_validation.json` | Document structure validation report ([validate-docs.md:23](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/validate-docs.md#L23)) |
-| `{doc_dir}/*.md` | In-place fixes for Mermaid blocks and structural markers ([validate-docs.md:24](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/validate-docs.md#L24)) |
-
-### Script: validate_docs_structure.py
-
-Validates document structure against TOC specification, checking PAGE_ID markers, AUTOGEN markers, and internal links ([validate-docs.md:28-30](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/validate-docs.md#L28-L30)):
-
-```bash
-python scripts/validate_docs_structure.py \
-    --doc-dir "{doc_dir}" \
-    --toc-file "{toc_file}"
-```
-
-Issue categories detected by the script ([validate-docs.md:75-83](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/validate-docs.md#L75-L83)):
-
-| Category | Description |
-|----------|-------------|
-| `page_id` | PAGE_ID marker missing or incorrect |
-| `autogen` | AUTOGEN marker issues (missing, mismatched, orphaned) |
-| `structure` | Basic structure issues (H1 headings, file size) |
-| `link` | Internal link issues (broken or undefined targets) |
-| `toc` | TOC alignment issues (missing pages, extra files) |
-
-### Script: validate_mermaid.py
-
-Extracts and validates Mermaid diagrams using the Mermaid CLI (`mmdc`) ([validate-docs.md:85-87](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/validate-docs.md#L85-L87)):
-
-```bash
-python3 scripts/validate_mermaid.py \
-    --input "{doc_dir}" \
-    --invalid-only
-```
-
-Mermaid error types and their fixes ([validate-docs.md:139-148](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/validate-docs.md#L139-L148)):
-
-| Type | Description | Common Fix |
-|------|-------------|------------|
-| `lexical_error` | Unrecognized text/characters | Quote node text with special characters |
-| `syntax_error` | General syntax issues | Check diagram type and arrow syntax |
-| `node_error` | Node definition problems | Balance brackets, quote labels |
-| `edge_error` | Arrow/edge problems | Use valid arrows (-->, ---) |
-| `cli_unavailable` | mmdc not installed | Install @mermaid-js/mermaid-cli |
-
-### Validation Workflow
-
-1. **Mermaid Diagram Validation** ([validate-docs.md:152-171](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/validate-docs.md#L152-L171)):
-   - Run `validate_mermaid.py` script
-   - If CLI unavailable, record limitation and leave diagrams unchanged
-   - Fix invalid diagrams (max 3 attempts per diagram)
-   - Comment out diagrams still invalid after 3 attempts
-
-2. **Document Structure Validation** ([validate-docs.md:173-197](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/validate-docs.md#L173-L197)):
-   - Run `validate_docs_structure.py` script
-   - Fix PAGE_ID issues (add missing, correct incorrect)
-   - Fix AUTOGEN marker issues (add missing BEGIN/END, correct mismatched IDs)
-   - Re-run to confirm all errors are fixed
-
-Sources: [validate-docs.md:1-202](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/validate-docs.md#L1-L202)
-<!-- END:AUTOGEN deepwiki-skill_03_workflow_validate-docs -->
-
----
-
-<!-- BEGIN:AUTOGEN deepwiki-skill_03_workflow_doc-summary -->
-## Phase 5: Summary Generation
-
-The summary generation phase produces a documentation summary report (`SUMMARY.md`) that provides an overview of the generation results, including completion status, citation statistics, diagram counts, and any issues from validation ([doc-summary.md:3-9](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-summary.md#L3-L9)).
-
-### Script: generate_summary.py
-
-The phase uses `generate_summary.py` to create the summary report ([doc-summary.md:13-15](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-summary.md#L13-L15)):
-
-```bash
-python3 /scripts/generate_summary.py \
-  --doc-dir "{doc_dir}" \
-  --toc-file "{toc_file}" \
-  --output "{output_dir}/_reports/SUMMARY.md"
-```
-
-Parameters ([doc-summary.md:25-33](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-summary.md#L25-L33)):
-
-| Parameter | Required | Default | Description |
-|-----------|----------|---------|-------------|
-| `--doc-dir` | Yes | - | Directory containing generated .md docs |
-| `--toc-file` | Yes | - | Path to toc.yaml file |
-| `--structure-report` | No | auto-detected | Structure validation report |
-| `--mermaid-report` | No | auto-detected | Mermaid validation report |
-| `--output` | No | `{doc_dir}/_reports/SUMMARY.md` | Output path |
-
-### Report Contents
-
-The generated `SUMMARY.md` includes ([doc-summary.md:37-82](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-summary.md#L37-L82)):
-
-1. **Generation Status**: Overall status with metrics table
-2. **Page Details**: Per-page breakdown of sections, citations, and diagrams
-3. **Source Coverage**: Lists covered and uncovered source files
-4. **Issues**: Errors, warnings, and recommendations from validation
-
-### Status Indicators
+doc-summary produces `SUMMARY.md` capturing generation status, citation statistics and source coverage, a diagram count, and any issues drawn from the validation reports ([doc-summary.md:5-9](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-summary.md#L5-L9)). It runs a single script, `generate_summary.py`, against `--doc-dir` and `--toc-file`, writing to `{output_dir}/_reports/SUMMARY.md` ([doc-summary.md:13-23](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-summary.md#L13-L23)). The script auto-detects the structure and Mermaid validation reports produced by validate-docs, parses the TOC to enumerate expected pages and sections, scans the generated docs for completion, counts citations and diagrams, and analyzes cited-versus-uncited source coverage ([doc-summary.md:31-33](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-summary.md#L31-L33), [doc-summary.md:97-104](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-summary.md#L97-L104)). The overall status is one of three indicators ([doc-summary.md:114-120](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-summary.md#L114-L120)):
 
 | Status | Meaning |
 |--------|---------|
-| Complete | All pages/sections generated, no errors ([doc-summary.md:118](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-summary.md#L118)) |
-| Incomplete | Some sections missing or has warnings ([doc-summary.md:119](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-summary.md#L119)) |
-| Has Errors | Validation errors present ([doc-summary.md:120](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-summary.md#L120)) |
+| ✅ Complete | All pages/sections generated, no errors ([doc-summary.md:118](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-summary.md#L118)) |
+| ⚠️ Incomplete | Some sections missing or has warnings ([doc-summary.md:119](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-summary.md#L119)) |
+| ❌ Has Errors | Validation errors present ([doc-summary.md:120](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-summary.md#L120)) |
 
-Sources: [doc-summary.md:1-127](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/doc-summary.md#L1-L127)
-<!-- END:AUTOGEN deepwiki-skill_03_workflow_doc-summary -->
+Because the summary reads the validation reports rather than regenerating them, missing reports are non-fatal: "Missing validation reports: Script continues without error/warning data" ([doc-summary.md:126](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-summary.md#L126)).
+
+Sources: [validate-docs.md:5-202](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/validate-docs.md#L5-L202), [doc-summary.md:5-127](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/doc-summary.md#L5-L127)
+<!-- END:AUTOGEN deepwiki-skill_03_workflow_validation-phases -->
 
 ---
 
-<!-- BEGIN:AUTOGEN deepwiki-skill_03_workflow_incremental-sync -->
-## Phase 6: Incremental Sync
+<!-- BEGIN:AUTOGEN deepwiki-skill_03_workflow_incremental -->
+## Incremental Sync Phase
 
-The incremental sync phase collects context needed to update existing documentation safely after code changes. It operates in two sub-phases: detecting TOC structure changes and detecting source code changes relevant to the TOC mappings ([incremental-sync.md:3-9](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L3-L9)).
+The incremental-sync phase collects the context needed to "update existing docs safely after changes" without a full regeneration. It is explicitly a context-gathering step: "This step does not rewrite docs; it produces change context that `doc-write` uses to regenerate only affected pages/sections" ([incremental-sync.md:5-9](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/incremental-sync.md#L5-L9)).
 
-This phase does not rewrite documentation directly; it produces change context that the `doc-write` phase uses to regenerate only affected pages and sections.
+It operates in two phases that produce two JSON artifacts ([incremental-sync.md:23-28](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/incremental-sync.md#L23-L28)):
 
-### Inputs and Outputs
+- **Phase A — `collect_sync_context.py`** detects structural differences between `toc.yaml` and the existing documentation files, writing `{output_dir}/_context/sync_context.json`. Its status field is one of `sync_needed`, `up_to_date`, or `full_rebuild_needed`, and its `changes` object enumerates added, removed, and modified pages and sections ([incremental-sync.md:36-71](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/incremental-sync.md#L36-L71)).
+- **Phase B — `collect_update_context.py`** detects source-code changes and maps them to affected wiki pages and sections, writing `{output_dir}/_context/update_context.json`. It records `base_commit`, `target_commit`, an `affected_pages` list (each with its `affected_sections` and `changed_files`), and an `unaffected_pages` list ([incremental-sync.md:73-120](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/incremental-sync.md#L73-L120)).
 
-| Type | Name | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| Input | `repo_path` | Yes | - | Absolute repository path ([incremental-sync.md:15](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L15)) |
-| Input | `target_commit` | No | `HEAD` | Target commit for change detection ([incremental-sync.md:19](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L19)) |
-| Output | `sync_context.json` | - | - | TOC sync result from Phase A ([incremental-sync.md:27](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L27)) |
-| Output | `update_context.json` | - | - | Source update context from Phase B ([incremental-sync.md:28](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L28)) |
+An optional helper, `get_section_update_diff.py`, can produce focused, line-numbered diffs for a specific set of files when detailed section updates are needed ([incremental-sync.md:123-146](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/incremental-sync.md#L123-L146)).
 
-### Phase A: collect_sync_context.py
+The phase's workflow first reads `doc_update_policy.md`, then runs Phase A and Phase B, and finally hands off to doc-write. Crucially, if Phase A "indicates TOC drift that requires a full rebuild, stop and recommend rerunning full generation", and the handoff to doc-write must "regenerate only affected pages/sections" while it does "not touch manual sections or content outside AUTOGEN markers" ([incremental-sync.md:148-156](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/incremental-sync.md#L148-L156)). The diagram below shows this decision flow.
 
-Detects structural differences between `toc.yaml` and existing documentation files ([incremental-sync.md:36-38](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L36-L38)):
-
-```bash
-python3 /scripts/collect_sync_context.py \
-  --repo-path "{repo_path}" \
-  --toc-file "{toc_file}" \
-  --doc-dir "{doc_dir}" \
-  --output "{output_dir}/_context/sync_context.json"
+```mermaid
+graph TD
+    A["Read doc_update_policy"] --> B["Phase A: collect_sync_context"]
+    B --> C{"TOC drift?"}
+    C -->|"full_rebuild_needed"| D["Stop and rerun full generation"]
+    C -->|"sync_needed or up_to_date"| E["Phase B: collect_update_context"]
+    E --> F["Map changes to affected pages"]
+    F --> G["Hand off to doc-write"]
+    G --> H["Regenerate only affected sections"]
 ```
 
-Output structure ([incremental-sync.md:59-71](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L59-L71)):
+Validation requires that both `sync_context.json` and `update_context.json` exist and are valid JSON, and that each "explicitly lists changes or states 'no changes'" ([incremental-sync.md:158-162](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/incremental-sync.md#L158-L162)).
 
-```json
-{
-  "status": "sync_needed|up_to_date|full_rebuild_needed",
-  "changes": {
-    "added_pages": ["04_new_page"],
-    "removed_pages": ["03_old_page"],
-    "modified_pages": ["01_overview"],
-    "added_sections": [{"page": "01_overview", "section": "new_section"}],
-    "removed_sections": []
-  },
-  "recommendation": "Regenerate modified pages and added pages"
-}
-```
-
-### Phase B: collect_update_context.py
-
-Detects source code changes and maps them to affected wiki pages and sections ([incremental-sync.md:73-75](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L73-L75)):
-
-```bash
-python3 /scripts/collect_update_context.py \
-  --repo-path "{repo_path}" \
-  --toc-file "{toc_file}" \
-  --doc-dir "{doc_dir}" \
-  --target-commit "{target_commit}" \
-  --output "{output_dir}/_context/update_context.json"
-```
-
-Output structure ([incremental-sync.md:100-121](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L100-L121)):
-
-```json
-{
-  "base_commit": "abc123",
-  "target_commit": "def456",
-  "affected_pages": [
-    {
-      "page_id": "myapp_01_overview",
-      "filename": "01_overview.md",
-      "affected_sections": ["myapp_01_overview_intro"],
-      "changed_files": ["src/main.ts"]
-    }
-  ],
-  "unaffected_pages": ["myapp_02_architecture"]
-}
-```
-
-### Workflow
-
-1. Run Phase A (`collect_sync_context.py`) to detect TOC drift ([incremental-sync.md:151-152](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L151-L152))
-2. If full rebuild needed, stop and recommend rerunning full generation
-3. Run Phase B (`collect_update_context.py`) to map code changes to pages/sections ([incremental-sync.md:153](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L153))
-4. Hand off to `doc-write` to regenerate only affected pages/sections, without touching manual sections or content outside AUTOGEN markers ([incremental-sync.md:154-156](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L154-L156))
-
-Sources: [incremental-sync.md:1-162](https://github.com/natsu1211/deepwiki-skill/blob/784d30af68157f49d7f829f85d49dafe9fba65cd/skills/wiki/references/workflow/incremental-sync.md#L1-L162)
-<!-- END:AUTOGEN deepwiki-skill_03_workflow_incremental-sync -->
+Sources: [incremental-sync.md:5-162](https://github.com/natsu1211/deepwiki-skill/blob/5623db8cf158176a7d55791d6fb9bcb992834262/.apm/skills/wiki/references/workflow/incremental-sync.md#L5-L162)
+<!-- END:AUTOGEN deepwiki-skill_03_workflow_incremental -->
 
 ---
