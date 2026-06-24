@@ -43,6 +43,32 @@ In Claude Code, register the marketplace and install this plugin
 
 Execute `/skills` command in Claude Code then you should see `wiki` skill in the list.
 
+#### apm (Agent Package Manager)
+
+[apm](https://github.com/microsoft/apm) installs agent primitives across multiple harnesses (Claude Code, Copilot, Cursor, Codex, Gemini, and more) from a single manifest. This repo ships an `apm.yml` and an `.apm/` package containing the `wiki` skill, the `workflow-runner` agent, and the `gen` prompt.
+
+Install directly with the apm CLI from your project root:
+
+```
+apm install natsu1211/deepwiki-skill
+```
+
+Or pin to a specific release:
+
+```
+apm install natsu1211/deepwiki-skill#v1.0.4
+```
+
+Or add it as a dependency in your own `apm.yml`, then run `apm install`:
+
+```yaml
+dependencies:
+  apm:
+    - natsu1211/deepwiki-skill
+```
+
+apm compiles the primitives into the target directory for your harness (e.g. `.claude/skills/wiki/` for Claude Code, `.agents/skills/wiki/` for the converged layout). To install only the skill without the agent/prompt, reference the single primitive: `natsu1211/deepwiki-skill/.apm/skills/wiki`.
+
 #### Gemini CLI
 > **Note**: Version >=0.24.0 is required to use agent skills. Manual installation will not install subagents, and generation quality may degrade due to the limited context window.
 
@@ -56,7 +82,7 @@ Copy the skills folder into `~/.gemini` (user scope) or `project_dir/.gemini`(wo
 
 ```
 git clone https://github.com/natsu1211/deepwiki-skill && cd deepwiki-skill
-cp -R skills ~/.gemini
+cp -R .apm/skills ~/.gemini
 ```
 
 Execute `/skills` command in Gemini CLI then you should see `wiki` skill in the list.
@@ -68,7 +94,7 @@ Copy the skills folder into `~/.codex` (user scope) or `project_dir/.codex`(work
 
 ```
 git clone https://github.com/natsu1211/deepwiki-skill && cd deepwiki-skill
-cp -R skills ~/.codex
+cp -R .apm/skills ~/.codex
 ```
 
 Execute `/skills` command in Codex then you should see `wiki` skill in the list.
@@ -207,8 +233,8 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          if [ -f skills/wiki/scripts/requirements.txt ]; then
-            pip install -r skills/wiki/scripts/requirements.txt
+          if [ -f .apm/skills/wiki/scripts/requirements.txt ]; then
+            pip install -r .apm/skills/wiki/scripts/requirements.txt
           fi
 
       - name: Run Wiki Doc Update

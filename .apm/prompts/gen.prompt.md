@@ -1,3 +1,7 @@
+---
+name: gen
+description: Generate or update wiki-style documentation for the current repository using the wiki skill. Parses CLI-style arguments and invokes the skill in the appropriate execution mode.
+---
 # Wiki Document Generator
 
 **Your response MUST be written in the language specified by the locale code (default: en-US).**
@@ -5,10 +9,10 @@
 ## Command Usage
 
 ```
-/deepwiki-local:gen                         # Automatic mode: full pipeline
-/deepwiki-local:gen --structure             # Structure-only model: generate TOC only
-/deepwiki-local:gen <toc.yaml>              # TOC-based model: generate from existing TOC
-/deepwiki-local:gen <toc.yaml> --update     # Incremental update model: update based on changes
+gen                         # Automatic mode: full pipeline
+gen --structure             # Structure-only model: generate TOC only
+gen <toc.yaml>              # TOC-based model: generate from existing TOC
+gen <toc.yaml> --update     # Incremental update model: update based on changes
 ```
 
 ## Arguments

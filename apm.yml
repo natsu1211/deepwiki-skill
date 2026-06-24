@@ -1,0 +1,22 @@
+name: deepwiki-skill
+version: 1.0.4
+description: Local wiki-style documentation generator for AI coding agents — evidence-based citations, Mermaid validation, and incremental updates.
+author: natsu1211
+license: MIT
+homepage: https://github.com/natsu1211/deepwiki-skill
+repository: https://github.com/natsu1211/deepwiki-skill
+
+# Skill + workflow-runner agent + gen prompt
+type: hybrid
+
+# Compile primitives for every supported harness.
+# The wiki skill deploys everywhere; the workflow-runner agent deploys to
+# the harnesses that support agents (others fall back to sequential execution).
+targets: all
+
+# Publish everything authored under .apm/ (skills/wiki, agents, prompts).
+includes: auto
+
+dependencies:
+  apm: []
+  mcp: []
