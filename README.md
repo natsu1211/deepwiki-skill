@@ -1,6 +1,23 @@
-# deepwiki-skill
+<div align="center">
 
-**deepwiki-skill** is an agent skill for Claude Code (and any other AI agent that supports agent skills) that automatically generates comprehensive, wiki-style documentation for any codebase.
+# 📚 deepwiki-skill
+
+### Generate comprehensive, evidence-based wiki documentation for any codebase
+
+**deepwiki-skill** is a portable **agent skill** that produces DeepWiki-style documentation — with line-level source citations and validated Mermaid diagrams — for Claude Code, Gemini, Codex, and any agent that supports agent skills.
+
+Install it across every harness with **one command** via [apm](https://github.com/microsoft/apm). Zero standalone agents, zero complex setup.
+
+![license](https://img.shields.io/badge/license-MIT-green.svg)
+![version](https://img.shields.io/badge/version-1.0.4-blue.svg)
+![apm](https://img.shields.io/badge/apm-compatible-8A2BE2.svg)
+![agent skill](https://img.shields.io/badge/agent-skill-orange.svg)
+
+**English** | [中文](./README.zh-CN.md) | [日本語](./README.ja.md)
+
+</div>
+
+---
 
 ## Why use deepwiki-skill
 
@@ -32,143 +49,94 @@
 
 > **Note**: While deepwiki-skill works with any coding agent that supports agent skills, Claude Code currently offers the best subagent support for optimal documentation generation. Claude Code is recommended for the best experience.
 
-#### Claude Code
+#### Recommended: apm (Agent Package Manager)
 
-In Claude Code, register the marketplace and install this plugin
+[apm](https://github.com/microsoft/apm) is a package manager for AI agent primitives. It installs the `wiki` skill, the `workflow-runner` agent, and the `gen-wiki` prompt into any supported harness (Claude Code, Copilot, Cursor, Codex, Gemini, and more) from a single manifest — so the same command works everywhere.
 
-```
-/plugin marketplace add natsu1211/deepwiki-skill
-/plugin install deepwiki-skill@deepwiki-skill-marketplace
-```
+First [install the apm CLI](https://microsoft.github.io/apm/quickstart/), then from your project root run:
 
-Execute `/skills` command in Claude Code then you should see `wiki` skill in the list.
-
-#### apm (Agent Package Manager)
-
-[apm](https://github.com/microsoft/apm) installs agent primitives across multiple harnesses (Claude Code, Copilot, Cursor, Codex, Gemini, and more) from a single manifest. This repo ships an `apm.yml` and an `.apm/` package containing the `wiki` skill, the `workflow-runner` agent, and the `gen` prompt.
-
-Install directly with the apm CLI from your project root:
-
-```
+```bash
 apm install natsu1211/deepwiki-skill
 ```
 
-Or pin to a specific release:
+Or install it globally:
 
-```
-apm install natsu1211/deepwiki-skill#v1.0.4
-```
-
-Or add it as a dependency in your own `apm.yml`, then run `apm install`:
-
-```yaml
-dependencies:
-  apm:
-    - natsu1211/deepwiki-skill
+```bash
+apm install -g natsu1211/deepwiki-skill
 ```
 
-apm compiles the primitives into the target directory for your harness (e.g. `.claude/skills/wiki/` for Claude Code, `.agents/skills/wiki/` for the converged layout). To install only the skill without the agent/prompt, reference the single primitive: `natsu1211/deepwiki-skill/.apm/skills/wiki`.
-
-#### Gemini CLI
-> **Note**: Version >=0.24.0 is required to use agent skills. Manual installation will not install subagents, and generation quality may degrade due to the limited context window.
-
-<b>via Gemini CLI Extension</b>
-
-`coming soon...`
-
-<b>manual</b>
-
-Copy the skills folder into `~/.gemini` (user scope) or `project_dir/.gemini`(workspace scope)
-
-```
-git clone https://github.com/natsu1211/deepwiki-skill && cd deepwiki-skill
-cp -R .apm/skills ~/.gemini
-```
-
-Execute `/skills` command in Gemini CLI then you should see `wiki` skill in the list.
-
-#### Codex
-> **Note**: Generation quality may degrade due to limited context window.
-
-Copy the skills folder into `~/.codex` (user scope) or `project_dir/.codex`(workspace scope)
-
-```
-git clone https://github.com/natsu1211/deepwiki-skill && cd deepwiki-skill
-cp -R .apm/skills ~/.codex
-```
-
-Execute `/skills` command in Codex then you should see `wiki` skill in the list.
+apm compiles the primitives into the right place for your harness (e.g. `.claude/skills/wiki/` for Claude Code, `.agents/skills/wiki/` for the converged layout).
 
 ### Usage
 
-Just write something like `Use wiki skill to generate wiki documentation` or `Invoke wiki skill to update documents at docs/wiki based on docs/wiki/toc.yaml` to tell agent to invoke skill.
+Just write something like `Use wiki skill to generate wiki documentation` or `Invoke wiki skill to update documents at docs/wiki based on docs/wiki/toc.yaml` to tell the agent to invoke the skill.
 
-Custom command `gen` is also provided to parse the arguments and explicitly invoke the skill. This allows you to use the skill like a regular CLI tool, making inputs more concise while expressing intent more precisely.
+Custom command `gen-wiki` is also provided to parse the arguments and explicitly invoke the skill. This allows you to use the skill like a regular CLI tool, making inputs more concise while expressing intent more precisely.
 
 #### Basic Usage
 
 Fully automatic wiki document generation:
 ```bash
-/deepwiki-skill:gen
+/gen-wiki
 ```
 
 Generate TOC file only:
 ```bash
-/deepwiki-skill:gen --structure
+/gen-wiki --structure
 ```
 
 Generate from existing TOC:
 ```bash
-/deepwiki-skill:gen docs/wiki/toc.yaml
+/gen-wiki docs/wiki/toc.yaml
 ```
 
 Update documentation after manually changing `toc.yaml` and/or code changes:
 ```bash
-/deepwiki-skill:gen docs/wiki/toc.yaml --update
+/gen-wiki docs/wiki/toc.yaml --update
 ```
 
 Specify output directory:
 ```bash
-/deepwiki-skill:gen --output ./documentation/wiki
+/gen-wiki --output ./documentation/wiki
 ```
 
 Generate documentation in Chinese:
 ```bash
-/deepwiki-skill:gen --language zh-CN
+/gen-wiki --language zh-CN
 ```
 
 Include only specific files:
 ```bash
-/deepwiki-skill:gen --include "src/**/*.ts"
+/gen-wiki --include "src/**/*.ts"
 ```
 
 Exclude test files:
 ```bash
-/deepwiki-skill:gen --exclude "**/*.test.js"
+/gen-wiki --exclude "**/*.test.js"
 ```
 
 Combined arguments:
 ```bash
-/deepwiki-skill:gen --language zh-CN --output ./docs --exclude "**/*.test.js"
+/gen-wiki --language zh-CN --output ./docs --exclude "**/*.test.js"
 ```
 
 Run from CLI (yolo mode / headless mode):
 ```bash
-claude -p "/deepwiki-skill:gen" --dangerously-skip-permissions
+claude -p "/gen-wiki" --dangerously-skip-permissions
 ```
 
 #### Use Cases
 
 1. Quickly understand a new project
-   - Use fully automatic mode: `/deepwiki-skill:gen`
+   - Use fully automatic mode: `/gen-wiki`
 
 2. Generate wiki documentation for your project with control over chapter structure
-   - First use structure-only mode to generate initial `toc.yaml`: `/deepwiki-skill:gen --structure`
+   - First use structure-only mode to generate initial `toc.yaml`: `/gen-wiki --structure`
    - Modify `docs/wiki/toc.yaml` according to your needs
-   - Then use TOC-based mode to regenerate documentation: `/deepwiki-skill:gen docs/wiki/toc.yaml`
+   - Then use TOC-based mode to regenerate documentation: `/gen-wiki docs/wiki/toc.yaml`
 
 3. Sync documentation when TOC file or code is updated
-   - Use Incremental Update mode: `/deepwiki-skill:gen docs/wiki/toc.yaml --update`
+   - Use Incremental Update mode: `/gen-wiki docs/wiki/toc.yaml --update`
 
 **Available Arguments:**
 
@@ -231,27 +199,27 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install apm and deepwiki-skill
+        run: |
+          curl -sSL https://aka.ms/apm-unix | sh
+          apm install natsu1211/deepwiki-skill --target claude
+
       - name: Install Python dependencies
         run: |
-          if [ -f .apm/skills/wiki/scripts/requirements.txt ]; then
-            pip install -r .apm/skills/wiki/scripts/requirements.txt
+          if [ -f .claude/skills/wiki/scripts/requirements.txt ]; then
+            pip install -r .claude/skills/wiki/scripts/requirements.txt
           fi
 
       - name: Run Wiki Doc Update
         id: deepwiki-skill
         uses: anthropics/claude-code-action@v1
         with:
-          plugin_marketplaces: 'https://github.com/natsu1211/deepwiki-skill.git'
-          plugins: 'deepwiki-skill@deepwiki-skill-marketplace'
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          prompt: '/deepwiki-skill:gen docs/wiki/toc.yaml --update'
+          prompt: '/gen-wiki docs/wiki/toc.yaml --update'
           additional_permissions: |
             actions: read
 
 ```
-
-#### Gemini CLI
-Refer to https://github.com/google-github-actions/run-gemini-cli
 
 #### Codex
 Refer to https://github.com/openai/codex-action
@@ -269,7 +237,7 @@ graph TD
     end
 
     subgraph CommandInterface
-        B["gen.md Command Parser"]
+        B["gen-wiki.prompt.md Command Parser"]
     end
 
     subgraph SkillDefinition
